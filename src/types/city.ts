@@ -3,7 +3,7 @@ export interface City {
   name: string;
   englishName: string;
   coordinates: [number, number];
-  status: 'visited' | 'planned' | 'wishlist';
+  status: "visited" | "planned" | "wishlist";
   visitDate?: string;
   duration?: string;
   tags: string[];
@@ -69,5 +69,5 @@ export interface CityFrontmatter {
   title?: string;
   date?: string;
   layout?: string;
-  status?: 'visited' | 'planned' | 'wishlist';
-} 
+  status?: "visited" | "planned" | "wishlist";
+}

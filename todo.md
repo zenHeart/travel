@@ -314,8 +314,6 @@ travel-website/
 │   │   ├── map.ts                     # 地图类型定义 ✅
 │   │   └── common.ts                  # 通用类型定义 ✅
 │   ├── constants/
-│   │   ├── cityNames.ts               # 城市名称映射 ✅
-│   │   ├── coordinates.ts             # 城市坐标数据 ✅
 │   │   ├── map.ts                     # 地图配置 ✅
 │   │   ├── routes.ts                  # 路由配置 ✅
 │   │   └── designTokens.ts            # 设计规范 ✅
@@ -427,9 +425,9 @@ content/
 └── cities/
     ├── visited/                       # 已访问城市 ✅
     │   ├── chongqing/
-    │   │   └── index.md              # 重庆主要攻略
+    │   │   └── index.md              # 重庆主要攻略（包含 frontmatter）
     │   ├── shenzhen/
-    │   │   ├── index.md              # 深圳主要攻略
+    │   │   ├── index.md              # 深圳主要攻略（包含 frontmatter）
     │   │   ├── detail.md             # 详细攻略（通过index.md链接）
     │   │   └── travel_way.jpg        # 图片资源
     │   └── [其他城市]/
@@ -437,8 +435,30 @@ content/
     │   └── [计划城市]/
     └── wishlist/                      # 愿望清单城市 ✅
         ├── wuhan/
-        │   └── index.md              # 武汉计划攻略
+        │   └── index.md              # 武汉计划攻略（包含 frontmatter）
         └── [其他愿望城市]/
+```
+
+### 城市 Frontmatter 配置格式
+
+每个城市的 `index.md` 文件必须包含 YAML frontmatter，格式如下：
+
+```yaml
+---
+chinese_name: 杭州 # 必需：中文名称
+english_name: Hangzhou # 必需：英文名称
+coordinates: [120.1551, 30.2741] # 必需：经纬度坐标 [经度, 纬度]
+status: visited # 必需：城市状态 visited/planned/wishlist
+visit_date: 2023-06-15 # 可选：访问日期
+duration: 3天2夜 # 可选：行程时长
+tags: [江南, 西湖, 美食] # 可选：标签数组
+title: 杭州之旅 # 可选：页面标题
+date: 2025-07-28 # 可选：创建日期
+layout: blog # 可选：布局类型
+---
+# 杭州
+
+## 行程
 ```
 
 ### 文件关联机制
@@ -452,10 +472,26 @@ content/
 
 1. **状态识别**: 通过目录名 `visited`、`planned`、`wishlist` 自动识别城市状态 ✅
 2. **文件扫描**: 扫描每个城市目录下的所有 `.md` 文件 ✅
-3. **链接解析**: 解析 index.md 中的内部链接，建立文件关联关系 ✅
-4. **图片收集**: 收集城市目录下的所有图片文件 ✅
-5. **元数据提取**: 从 markdown 文件的 frontmatter 中提取元数据 ✅
+3. **Frontmatter 解析**: 从 index.md 的 YAML frontmatter 中提取城市基础信息 ✅
+4. **链接解析**: 解析 index.md 中的内部链接，建立文件关联关系 ✅
+5. **图片收集**: 收集城市目录下的所有图片文件 ✅
 6. **空态处理**: 如果某个状态目录不存在或为空，显示空态 UI ✅
+
+### 数据获取优先级
+
+系统按以下优先级获取城市数据：
+
+1. **Frontmatter 优先**: 城市名称、坐标、访问日期等信息优先从 frontmatter 获取
+2. **内容解析备用**: 如果 frontmatter 中缺少某些信息，会尝试从 markdown 内容中解析
+3. **验证机制**: 缺少必要信息（如坐标、名称）的城市将被跳过并显示警告
+
+### 迁移后的改进
+
+- ✅ **去中心化配置**: 每个城市的配置信息存储在对应的 index.md 中
+- ✅ **数据一致性**: 城市信息与内容文件存储在同一位置，避免同步问题
+- ✅ **易于维护**: 添加新城市只需创建目录和 index.md 文件
+- ✅ **版本控制友好**: 城市信息变更可以通过 Git 跟踪
+- ✅ **自动验证**: 提供验证脚本确保数据完整性
 
 ## 功能代办事项（按 MVP 优先级）
 
