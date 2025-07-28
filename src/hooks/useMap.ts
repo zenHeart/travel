@@ -171,6 +171,25 @@ export function useMap() {
             icon: icon,
             title: city.name,
             extData: { cityId: city.id },
+            // 添加城市名称标签
+            label: {
+              content: city.name,
+              direction: "bottom",
+              offset: new AMap.Pixel(0, 5),
+              style: {
+                backgroundColor: "rgba(0, 0, 0, 0.8)",
+                color: "#ffffff",
+                fontSize: "12px",
+                fontWeight: "bold",
+                padding: "4px 8px",
+                borderRadius: "4px",
+                border: "none",
+                boxShadow: "0 2px 4px rgba(0,0,0,0.3)",
+                whiteSpace: "nowrap",
+                fontFamily:
+                  '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+              },
+            },
           });
 
           // 绑定点击事件

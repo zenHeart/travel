@@ -31,19 +31,47 @@ export const MAP_CONFIG = {
 
 export const MARKER_ICONS = {
   visited: {
-    url: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTkgMTJMMTUgNkwyMSAxMkwyMSAxOEgxNVYxMkg5VjE4SDNWMTJMOSAxMloiIGZpbGw9IiMxMEI5ODEiLz4KPC9zdmc+",
-    size: [24, 24],
-    anchor: [12, 12],
+    url:
+      "data:image/svg+xml;base64," +
+      btoa(`
+      <svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="16" cy="37" rx="8" ry="3" fill="rgba(0,0,0,0.2)"/>
+        <path d="M16 2C10.477 2 6 6.477 6 12C6 20 16 36 16 36S26 20 26 12C26 6.477 21.523 2 16 2Z" fill="#10B981" stroke="#ffffff" stroke-width="2"/>
+        <path d="M12 12L14.5 14.5L20 9" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    `),
+    size: [32, 40],
+    anchor: [16, 40],
+    color: "#10B981",
   },
   planned: {
-    url: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyQzIgMTcuNTIgNi40OCAyMiAxMiAyMkMxNy41MiAyMiAyMiAxNy41MiAyMiAxMkMyMiA2LjQ4IDE3LjUyIDIgMTIgMloiIGZpbGw9IiNGNTlFMEIiLz4KPHBhdGggZD0iTTEyIDZWN0gxMlY2Wk0xMiA4VjEwSDEyVjhNMTIgMTFWMTNIMTJWMU0xMiAxNFYxNkgxMlYxNFoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPg==",
-    size: [24, 24],
-    anchor: [12, 12],
+    url:
+      "data:image/svg+xml;base64," +
+      btoa(`
+      <svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="16" cy="37" rx="8" ry="3" fill="rgba(0,0,0,0.2)"/>
+        <path d="M16 2C10.477 2 6 6.477 6 12C6 20 16 36 16 36S26 20 26 12C26 6.477 21.523 2 16 2Z" fill="#F59E0B" stroke="#ffffff" stroke-width="2"/>
+        <circle cx="16" cy="12" r="5" fill="none" stroke="#ffffff" stroke-width="1.5"/>
+        <path d="M16 9V12L18 14" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    `),
+    size: [32, 40],
+    anchor: [16, 40],
+    color: "#F59E0B",
   },
   wishlist: {
-    url: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDIxLjM1TDEwLjU1IDIwLjAzQzUuNCAxNS4zNiAyIDEyLjI3IDIgOC41QzIgNS40MSA0LjQyIDMgNy41IDNDOS4yNCAzIDEwLjkxIDMuODEgMTIgNS4wOEMxMy4wOSAzLjgxIDE0Ljc2IDMgMTYuNSAzQzE5LjU4IDMgMjIgNS40MSAyMiA4LjVDMjIgMTIuMjcgMTguNiAxNS4zNiAxMy40NSAyMC4wNEwxMiAyMS4zNVoiIGZpbGw9IiMzQjgyRjYiLz4KPC9zdmc+",
-    size: [24, 24],
-    anchor: [12, 12],
+    url:
+      "data:image/svg+xml;base64," +
+      btoa(`
+      <svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="16" cy="37" rx="8" ry="3" fill="rgba(0,0,0,0.2)"/>
+        <path d="M16 2C10.477 2 6 6.477 6 12C6 20 16 36 16 36S26 20 26 12C26 6.477 21.523 2 16 2Z" fill="#3B82F6" stroke="#ffffff" stroke-width="2"/>
+        <path d="M16 18C16 18 20.5 14.5 20.5 11.5C20.5 9.5 19 8 16.5 8C16 8 16 8 16 8C16 8 16 8 15.5 8C13 8 11.5 9.5 11.5 11.5C11.5 14.5 16 18 16 18Z" fill="#ffffff"/>
+      </svg>
+    `),
+    size: [32, 40],
+    anchor: [16, 40],
+    color: "#3B82F6",
   },
 };
 
