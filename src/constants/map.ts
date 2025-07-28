@@ -35,10 +35,10 @@ export const MARKER_ICONS = {
       "data:image/svg+xml;base64," +
       btoa(`
       <svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="16" cy="37" rx="8" ry="3" fill="rgba(0,0,0,0.2)"/>
-        <path d="M16 2C10.477 2 6 6.477 6 12C6 20 16 36 16 36S26 20 26 12C26 6.477 21.523 2 16 2Z" fill="#10B981" stroke="#ffffff" stroke-width="2"/>
-        <circle cx="16" cy="12" r="6" fill="#ffffff" fill-opacity="0.9"/>
-        <path d="M13 12L15 14L19 10" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <ellipse cx="16" cy="37" rx="8" ry="3" fill="rgba(0,0,0,0.15)"/>
+        <path d="M16 2C10.477 2 6 6.477 6 12C6 20 16 36 16 36S26 20 26 12C26 6.477 21.523 2 16 2Z" fill="#10B981"/>
+        <circle cx="16" cy="12" r="7" fill="#ffffff"/>
+        <path d="M12 12L15 15L20 10" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
       </svg>
     `),
     size: [32, 40],
@@ -50,12 +50,11 @@ export const MARKER_ICONS = {
       "data:image/svg+xml;base64," +
       btoa(`
       <svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="16" cy="37" rx="8" ry="3" fill="rgba(0,0,0,0.2)"/>
-        <path d="M16 2C10.477 2 6 6.477 6 12C6 20 16 36 16 36S26 20 26 12C26 6.477 21.523 2 16 2Z" fill="#F59E0B" stroke="#ffffff" stroke-width="2"/>
-        <rect x="12" y="8" width="8" height="8" rx="1" fill="#ffffff" fill-opacity="0.9"/>
-        <rect x="13" y="10" width="6" height="1" fill="#F59E0B"/>
-        <rect x="13" y="12" width="4" height="1" fill="#F59E0B"/>
-        <rect x="13" y="14" width="5" height="1" fill="#F59E0B"/>
+        <ellipse cx="16" cy="37" rx="8" ry="3" fill="rgba(0,0,0,0.15)"/>
+        <path d="M16 2C10.477 2 6 6.477 6 12C6 20 16 36 16 36S26 20 26 12C26 6.477 21.523 2 16 2Z" fill="#F59E0B"/>
+        <circle cx="16" cy="12" r="7" fill="#ffffff"/>
+        <circle cx="16" cy="12" r="3" fill="#F59E0B"/>
+        <circle cx="16" cy="9" r="1.5" fill="#ffffff"/>
       </svg>
     `),
     size: [32, 40],
@@ -67,10 +66,11 @@ export const MARKER_ICONS = {
       "data:image/svg+xml;base64," +
       btoa(`
       <svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="16" cy="37" rx="8" ry="3" fill="rgba(0,0,0,0.2)"/>
-        <path d="M16 2C10.477 2 6 6.477 6 12C6 20 16 36 16 36S26 20 26 12C26 6.477 21.523 2 16 2Z" fill="#3B82F6" stroke="#ffffff" stroke-width="2"/>
-        <path d="M16 15.5L13 13L11.5 14.5L16 19L20.5 14.5L19 13L16 15.5Z" fill="#ffffff"/>
-        <path d="M16 9.5L19 7L20.5 8.5L16 13L11.5 8.5L13 7L16 9.5Z" fill="#ffffff"/>
+        <ellipse cx="16" cy="37" rx="8" ry="3" fill="rgba(0,0,0,0.15)"/>
+        <path d="M16 2C10.477 2 6 6.477 6 12C6 20 16 36 16 36S26 20 26 12C26 6.477 21.523 2 16 2Z" fill="#3B82F6"/>
+        <circle cx="16" cy="12" r="7" fill="#ffffff"/>
+        <path d="M16 7.5C17.5 7.5 18.5 8.5 18.5 9.5C18.5 10.5 17.5 11.5 16 13C14.5 11.5 13.5 10.5 13.5 9.5C13.5 8.5 14.5 7.5 16 7.5Z" fill="#3B82F6"/>
+        <circle cx="16" cy="15" r="1.5" fill="#3B82F6"/>
       </svg>
     `),
     size: [32, 40],
