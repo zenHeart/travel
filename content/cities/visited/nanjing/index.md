@@ -1,3 +1,13 @@
+---
+chinese_name: 南京
+english_name: Nanjing
+coordinates: [118.7969, 32.0603]
+status: visited
+tags: []
+date: 2025-07-28
+layout: blog
+---
+
 # 南京
 
 ## 行程

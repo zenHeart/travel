@@ -1,3 +1,13 @@
+---
+chinese_name: 重庆
+english_name: Chongqing
+coordinates: [106.5516, 29.563]
+status: visited
+tags: []
+date: 2025-07-28
+layout: blog
+---
+
 # 重庆
 
 ## 行程

@@ -1,5 +1,9 @@
 ---
 title: travel_plan
+chinese_name: 深圳
+english_name: Shenzhen
+coordinates: [114.0579, 22.5431]
+status: visited
 tags: travel_plan
 date: 2017-05-22
 layout: blog

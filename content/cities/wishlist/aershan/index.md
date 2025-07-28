@@ -1,3 +1,13 @@
+---
+chinese_name: 阿尔山
+english_name: Arxan
+coordinates: [119.9437, 47.177]
+status: wishlist
+tags: []
+date: 2025-07-28
+layout: blog
+---
+
 # 阿尔山
 
 

@@ -1,3 +1,13 @@
+---
+chinese_name: 稻城
+english_name: Daocheng
+coordinates: [100.2971, 29.037]
+status: wishlist
+tags: []
+date: 2025-07-28
+layout: blog
+---
+
 # 稻城亚丁
 
 1. 确定往返机票，建议错峰游  10.4 - 10.8

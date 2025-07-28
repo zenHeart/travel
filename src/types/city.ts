@@ -56,4 +56,18 @@ export interface CityMetadata {
   tags?: string[];
   date?: string;
   layout?: string;
+}
+
+// 新增：城市 frontmatter 配置接口
+export interface CityFrontmatter {
+  chinese_name?: string;
+  english_name?: string;
+  coordinates?: [number, number];
+  visit_date?: string;
+  duration?: string;
+  tags?: string[];
+  title?: string;
+  date?: string;
+  layout?: string;
+  status?: 'visited' | 'planned' | 'wishlist';
 } 

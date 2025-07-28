@@ -1,3 +1,13 @@
+---
+chinese_name: 西安
+english_name: Xi'an
+coordinates: [108.9398, 34.3416]
+status: visited
+tags: []
+date: 2025-07-28
+layout: blog
+---
+
 # 西安
 
 ## 行程

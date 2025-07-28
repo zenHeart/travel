@@ -1,3 +1,13 @@
+---
+chinese_name: 武汉
+english_name: Wuhan
+coordinates: [114.3054, 30.5931]
+status: wishlist
+tags: []
+date: 2025-07-28
+layout: blog
+---
+
 # 武汉
 
 ## 待打卡

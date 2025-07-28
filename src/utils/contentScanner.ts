@@ -1,6 +1,5 @@
-import { City, MarkdownFile, InternalLink, ImageFile } from "../types/city";
-import { CITY_COORDINATES } from "../constants/coordinates";
-import { CITY_NAMES } from "../constants/cityNames";
+import { City, MarkdownFile, InternalLink, ImageFile, CityFrontmatter } from "../types/city";
+import yaml from 'js-yaml';
 
 export class ContentScanner {
   cities: City[] = [];
@@ -65,12 +64,26 @@ export class ContentScanner {
 
   private async buildCityData(cityId: string, status: 'visited' | 'wishlist', indexContent: string): Promise<City | null> {
     try {
-      const cityName = CITY_NAMES[cityId]?.chinese || cityId;
-      const englishName = CITY_NAMES[cityId]?.english || cityId;
-      const coordinates = CITY_COORDINATES[cityId];
+      // 解析 frontmatter
+      const frontmatter = this.parseFrontmatter(indexContent);
+      
+      // 必须从 frontmatter 获取所有基础信息
+      const cityName = frontmatter.chinese_name;
+      const englishName = frontmatter.english_name;
+      const coordinates = frontmatter.coordinates;
 
-      if (!coordinates) {
-        console.warn(`未找到城市 ${cityId} 的坐标信息`);
+      if (!cityName) {
+        console.warn(`城市 ${cityId} 缺少中文名称 (chinese_name)`);
+        return null;
+      }
+
+      if (!englishName) {
+        console.warn(`城市 ${cityId} 缺少英文名称 (english_name)`);
+        return null;
+      }
+
+      if (!coordinates || !Array.isArray(coordinates) || coordinates.length !== 2) {
+        console.warn(`城市 ${cityId} 缺少或格式错误的坐标信息 (coordinates)`);
         return null;
       }
 
@@ -136,10 +149,10 @@ export class ContentScanner {
       // 解析内部链接
       const internalLinks = this.parseInternalLinks(indexContent);
 
-      // 提取元数据
-      const visitDate = this.extractVisitDate(indexContent);
-      const duration = this.extractDuration(indexContent);
-      const tags = this.extractTags(indexContent);
+      // 提取元数据 - 优先级：frontmatter > 内容解析 > 默认值
+      const visitDate = frontmatter.visit_date || this.extractVisitDate(indexContent);
+      const duration = frontmatter.duration || this.extractDuration(indexContent);
+      const tags = frontmatter.tags || this.extractTags(indexContent);
       const summary = this.extractSummary(indexContent);
       const highlights = this.extractHighlights(indexContent);
       const budget = this.extractBudget(indexContent);
@@ -173,6 +186,29 @@ export class ContentScanner {
       console.error(`构建城市数据时出错 (${cityId}):`, error);
       return null;
     }
+  }
+
+  /**
+   * 解析 Markdown 文件的 YAML frontmatter
+   * @param content Markdown 文件内容
+   * @returns 解析后的 frontmatter 对象
+   */
+  private parseFrontmatter(content: string): CityFrontmatter {
+    const frontmatterRegex = /^---\r?\n([\s\S]*?)\r?\n---/;
+    const match = content.match(frontmatterRegex);
+    
+    if (match) {
+      try {
+        const frontmatter = yaml.load(match[1]) as CityFrontmatter;
+        console.log('解析到 frontmatter:', frontmatter);
+        return frontmatter || {};
+      } catch (error) {
+        console.warn('解析 frontmatter 失败:', error);
+        return {};
+      }
+    }
+    
+    return {};
   }
 
   private parseInternalLinks(content: string): InternalLink[] {

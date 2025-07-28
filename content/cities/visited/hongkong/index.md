@@ -1,3 +1,13 @@
+---
+chinese_name: 香港
+english_name: Hong Kong
+coordinates: [114.1694, 22.3193]
+status: visited
+tags: []
+date: 2025-07-28
+layout: blog
+---
+
 # 香港购物
 
 ## 屯门广场

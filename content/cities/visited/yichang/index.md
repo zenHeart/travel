@@ -1,3 +1,13 @@
+---
+chinese_name: 宜昌
+english_name: Yichang
+coordinates: [111.2865, 30.6919]
+status: visited
+tags: []
+date: 2025-07-28
+layout: blog
+---
+
 # 宜昌
 
 

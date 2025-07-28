@@ -1,3 +1,13 @@
+---
+chinese_name: 青海
+english_name: Qinghai
+coordinates: [101.7801, 36.6208]
+status: visited
+tags: []
+date: 2025-07-28
+layout: blog
+---
+
 # 青海之行
 
 
