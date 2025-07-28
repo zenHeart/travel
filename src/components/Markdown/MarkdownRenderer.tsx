@@ -43,7 +43,21 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     if (src.startsWith("./") || src.startsWith("../")) {
       // 移除开头的 ./
       const cleanSrc = src.replace(/^\.\//, "");
-      return `/content/cities/${basePath}/${cleanSrc}`;
+
+      // 区分开发环境和生产环境
+      const isDev = import.meta.env.DEV;
+
+      if (isDev) {
+        // 开发环境：直接访问content目录
+        return `/content/cities/${basePath}/${cleanSrc}`;
+      } else {
+        // 生产环境：考虑base路径
+        const deployBase = import.meta.env.VITE_BASE_URL || "/";
+        return `${deployBase}content/cities/${basePath}/${cleanSrc}`.replace(
+          /\/+/g,
+          "/"
+        );
+      }
     }
 
     return src;
@@ -182,7 +196,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
           ul: ({ children, ...props }) => (
             <ul
               {...props}
-              className="list-disc list-inside space-y-2 my-4 text-left"
+              className="list-disc list-outside ml-6 space-y-1 my-4 text-left"
             >
               {children}
             </ul>
@@ -190,14 +204,14 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
           ol: ({ children, ...props }) => (
             <ol
               {...props}
-              className="list-decimal list-inside space-y-2 my-4 text-left"
+              className="list-decimal list-outside ml-6 space-y-1 my-4 text-left"
             >
               {children}
             </ol>
           ),
           // 自定义列表项样式
           li: ({ children, ...props }) => (
-            <li {...props} className="text-gray-700 leading-relaxed">
+            <li {...props} className="text-gray-700 leading-relaxed pl-2">
               {children}
             </li>
           ),
