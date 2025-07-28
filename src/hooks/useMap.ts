@@ -95,12 +95,13 @@ export function useMap() {
       // 获取最近访问的城市作为默认中心点
       const recentCity = getMostRecentVisitedCity(cities);
       const center = recentCity ? recentCity.coordinates : MAP_CONFIG.center;
+      console.log("地图中心点:", center);
 
       // 创建地图实例 - 使用卫星图
       const map = new AMap.Map("map-container", {
         center: center,
         zoom: recentCity ? 10 : MAP_CONFIG.zoom, // 城市级别显示
-        mapStyle: "amap://styles/satellite", // 使用卫星图
+        mapStyle: "amap://styles/normal", // 使用卫星图
         minZoom: MAP_CONFIG.restrictions.minZoom,
         maxZoom: MAP_CONFIG.restrictions.maxZoom,
         bounds: MAP_CONFIG.restrictions.bounds,
@@ -110,6 +111,8 @@ export function useMap() {
 
       // 只添加定位控件
       map.addControl(new AMap.Geolocation());
+      // 创建一个卫星图图层
+      map.setLayers([new AMap.TileLayer.Satellite()]);
 
       setMapInstance(map);
       setMapState((prev) => ({
