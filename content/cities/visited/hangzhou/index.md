@@ -2,7 +2,6 @@
 chinese_name: 杭州
 english_name: Hangzhou
 coordinates: [120.1551, 30.2741]
-status: visited
 tags: []
 date: 2025-07-28
 layout: blog

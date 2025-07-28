@@ -18,12 +18,16 @@ export class ContentScanner {
       const visitedCities = await this.scanCityDirectory("visited");
       console.log("已访问城市:", visitedCities.length);
 
+      // 扫描计划中城市
+      const plannedCities = await this.scanCityDirectory("planned");
+      console.log("计划中城市:", plannedCities.length);
+
       // 扫描愿望清单城市
       const wishlistCities = await this.scanCityDirectory("wishlist");
       console.log("愿望清单城市:", wishlistCities.length);
 
       // 合并所有城市
-      this.cities = [...visitedCities, ...wishlistCities];
+      this.cities = [...visitedCities, ...plannedCities, ...wishlistCities];
       console.log("总城市数:", this.cities.length);
 
       return this.cities;
@@ -34,7 +38,7 @@ export class ContentScanner {
   }
 
   private async scanCityDirectory(
-    status: "visited" | "wishlist"
+    status: "visited" | "planned" | "wishlist"
   ): Promise<City[]> {
     const cities: City[] = [];
 
@@ -52,7 +56,7 @@ export class ContentScanner {
 
       for (const [path, content] of Object.entries(contentModules)) {
         const pathParts = path.split("/");
-        const fileStatus = pathParts[3] as "visited" | "wishlist";
+        const fileStatus = pathParts[3] as "visited" | "planned" | "wishlist";
         const cityId = pathParts[4];
 
         console.log(
@@ -80,7 +84,7 @@ export class ContentScanner {
 
   private async buildCityData(
     cityId: string,
-    status: "visited" | "wishlist",
+    status: "visited" | "planned" | "wishlist",
     indexContent: string
   ): Promise<City | null> {
     try {
@@ -159,7 +163,10 @@ export class ContentScanner {
 
         for (const [imagePath, imageUrl] of Object.entries(imageModules)) {
           const pathParts = imagePath.split("/");
-          const imageStatus = pathParts[3] as "visited" | "wishlist";
+          const imageStatus = pathParts[3] as
+            | "visited"
+            | "planned"
+            | "wishlist";
           const imageCityId = pathParts[4];
 
           if (imageCityId === cityId && imageStatus === status) {
