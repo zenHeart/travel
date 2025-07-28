@@ -48,7 +48,7 @@ export function useMap() {
     selectedMarker: null,
   });
 
-  const [mapInstance, setMapInstance] = useState<any>(null);
+  const [mapInstance, setMapInstance] = useState<unknown>(null);
   const [retryCount, setRetryCount] = useState(0);
   const initAttempted = useRef(false);
   const componentMounted = useRef(false);
@@ -153,6 +153,7 @@ export function useMap() {
 
       try {
         const markers: CityMarker[] = cities.map((city) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const AMap = (window as any).AMap;
 
           // 创建标记图标
@@ -208,7 +209,8 @@ export function useMap() {
 
         // 添加所有标记到地图
         markers.forEach((cityMarker) => {
-          mapInstance.add(cityMarker.marker);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (mapInstance as any).add(cityMarker.marker);
         });
 
         setMapState((prev) => ({ ...prev, markers }));

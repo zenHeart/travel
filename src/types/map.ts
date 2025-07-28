@@ -8,7 +8,7 @@ export interface MapConfig {
 
 export interface CityMarker {
   data: City;
-  marker: any;
+  marker: unknown;
 }
 
 export interface MapState {
