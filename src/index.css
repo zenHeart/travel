@@ -167,4 +167,25 @@
   .markdown-content pre code {
     @apply bg-transparent text-gray-100 p-0;
   }
+
+  /* HTML 表格样式支持 */
+  .markdown-content table {
+    @apply min-w-full border border-gray-300 my-4;
+  }
+
+  .markdown-content thead th {
+    @apply border border-gray-300 px-4 py-2 bg-gray-100 font-medium text-left;
+  }
+
+  .markdown-content tbody tr td {
+    @apply border border-gray-300 px-4 py-2 text-left;
+  }
+
+  .markdown-content th {
+    @apply border border-gray-300 px-4 py-2 bg-gray-100 font-medium text-left;
+  }
+
+  .markdown-content td {
+    @apply border border-gray-300 px-4 py-2 text-left;
+  }
 }
