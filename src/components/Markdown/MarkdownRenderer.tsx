@@ -1,6 +1,8 @@
-import React from 'react';
-import ReactMarkdown from 'react-markdown';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
+import { useNavigate } from "react-router-dom";
 
 interface MarkdownRendererProps {
   content: string;
@@ -8,10 +10,10 @@ interface MarkdownRendererProps {
   basePath?: string; // 添加基础路径参数
 }
 
-export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ 
-  content, 
-  className = '',
-  basePath = ''
+export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
+  content,
+  className = "",
+  basePath = "",
 }) => {
   const navigate = useNavigate();
 
@@ -23,32 +25,34 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       navigate(`/city/${cityId}`);
       return;
     }
-    
+
     // 处理普通链接
-    if (href.startsWith('http')) {
-      window.open(href, '_blank');
+    if (href.startsWith("http")) {
+      window.open(href, "_blank");
     }
   };
 
   const resolveImagePath = (src: string): string => {
     // 如果是绝对路径，直接返回
-    if (src.startsWith('http') || src.startsWith('/')) {
+    if (src.startsWith("http") || src.startsWith("/")) {
       return src;
     }
-    
+
     // 如果是相对路径，需要转换为绝对路径
-    if (src.startsWith('./') || src.startsWith('../')) {
+    if (src.startsWith("./") || src.startsWith("../")) {
       // 移除开头的 ./
-      const cleanSrc = src.replace(/^\.\//, '');
+      const cleanSrc = src.replace(/^\.\//, "");
       return `/content/cities/${basePath}/${cleanSrc}`;
     }
-    
+
     return src;
   };
 
   return (
     <div className={`markdown-content ${className}`}>
       <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeRaw]}
         components={{
           // 自定义链接处理
           a: ({ href, children, ...props }) => {
@@ -71,8 +75,8 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
           },
           // 自定义图片处理
           img: ({ src, alt, ...props }) => {
-            const resolvedSrc = src ? resolveImagePath(src) : '';
-            
+            const resolvedSrc = src ? resolveImagePath(src) : "";
+
             return (
               <div className="my-4">
                 <img
@@ -82,46 +86,64 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
                   className="max-w-full h-auto rounded-lg shadow-md"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
-                    const errorDiv = document.createElement('div');
-                    errorDiv.className = 'p-4 bg-gray-100 rounded-lg text-center text-gray-500';
-                    errorDiv.textContent = `图片加载失败: ${alt || '未知图片'}`;
+                    target.style.display = "none";
+                    const errorDiv = document.createElement("div");
+                    errorDiv.className =
+                      "p-4 bg-gray-100 rounded-lg text-center text-gray-500";
+                    errorDiv.textContent = `图片加载失败: ${alt || "未知图片"}`;
                     target.parentNode?.insertBefore(errorDiv, target);
                   }}
                   onLoad={() => {
-                    console.log('图片加载成功:', resolvedSrc);
+                    console.log("图片加载成功:", resolvedSrc);
                   }}
                 />
                 {alt && (
-                  <p className="text-sm text-gray-500 mt-2 text-center">{alt}</p>
+                  <p className="text-sm text-gray-500 mt-2 text-center">
+                    {alt}
+                  </p>
                 )}
               </div>
             );
           },
           // 自定义标题样式
           h1: ({ children, ...props }) => (
-            <h1 {...props} className="text-3xl font-bold text-gray-900 mb-6 mt-8 text-left">
+            <h1
+              {...props}
+              className="text-3xl font-bold text-gray-900 mb-6 mt-8 text-left"
+            >
               {children}
             </h1>
           ),
           h2: ({ children, ...props }) => (
-            <h2 {...props} className="text-2xl font-bold text-gray-900 mb-4 mt-6 text-left">
+            <h2
+              {...props}
+              className="text-2xl font-bold text-gray-900 mb-4 mt-6 text-left"
+            >
               {children}
             </h2>
           ),
           h3: ({ children, ...props }) => (
-            <h3 {...props} className="text-xl font-semibold text-gray-900 mb-3 mt-5 text-left">
+            <h3
+              {...props}
+              className="text-xl font-semibold text-gray-900 mb-3 mt-5 text-left"
+            >
               {children}
             </h3>
           ),
           h4: ({ children, ...props }) => (
-            <h4 {...props} className="text-lg font-medium text-gray-900 mb-2 mt-4 text-left">
+            <h4
+              {...props}
+              className="text-lg font-medium text-gray-900 mb-2 mt-4 text-left"
+            >
               {children}
             </h4>
           ),
           // 自定义段落样式
           p: ({ children, ...props }) => (
-            <p {...props} className="text-gray-700 leading-relaxed mb-4 text-left">
+            <p
+              {...props}
+              className="text-gray-700 leading-relaxed mb-4 text-left"
+            >
               {children}
             </p>
           ),
@@ -157,12 +179,18 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
           ),
           // 自定义列表样式
           ul: ({ children, ...props }) => (
-            <ul {...props} className="list-disc list-inside space-y-2 my-4 text-left">
+            <ul
+              {...props}
+              className="list-disc list-inside space-y-2 my-4 text-left"
+            >
               {children}
             </ul>
           ),
           ol: ({ children, ...props }) => (
-            <ol {...props} className="list-decimal list-inside space-y-2 my-4 text-left">
+            <ol
+              {...props}
+              className="list-decimal list-inside space-y-2 my-4 text-left"
+            >
               {children}
             </ol>
           ),
@@ -181,12 +209,18 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
             </div>
           ),
           th: ({ children, ...props }) => (
-            <th {...props} className="border border-gray-300 px-4 py-2 bg-gray-100 font-medium text-left">
+            <th
+              {...props}
+              className="border border-gray-300 px-4 py-2 bg-gray-100 font-medium text-left"
+            >
               {children}
             </th>
           ),
           td: ({ children, ...props }) => (
-            <td {...props} className="border border-gray-300 px-4 py-2 text-left">
+            <td
+              {...props}
+              className="border border-gray-300 px-4 py-2 text-left"
+            >
               {children}
             </td>
           ),
@@ -196,4 +230,4 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       </ReactMarkdown>
     </div>
   );
-}; 
+};
