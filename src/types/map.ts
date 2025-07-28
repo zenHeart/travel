@@ -1,3 +1,5 @@
+import { City } from "./city";
+
 export interface MapConfig {
   center: [number, number];
   zoom: number;
@@ -5,11 +7,8 @@ export interface MapConfig {
 }
 
 export interface CityMarker {
-  id: string;
-  position: [number, number];
-  status: 'visited' | 'planned' | 'wishlist';
-  name: string;
-  data: Record<string, unknown>;
+  data: City;
+  marker: any;
 }
 
 export interface MapState {
@@ -21,6 +20,6 @@ export interface MapState {
 }
 
 export interface MapEvent {
-  type: 'marker-click' | 'map-click' | 'zoom-change' | 'pan-change';
+  type: "marker-click" | "map-click" | "zoom-change" | "pan-change";
   data?: Record<string, unknown>;
-} 
+}

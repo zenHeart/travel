@@ -48,7 +48,7 @@ export function useMap() {
     selectedMarker: null,
   });
 
-  const [mapInstance, setMapInstance] = useState<AMap.Map | null>(null);
+  const [mapInstance, setMapInstance] = useState<any>(null);
   const [retryCount, setRetryCount] = useState(0);
   const initAttempted = useRef(false);
   const componentMounted = useRef(false);
@@ -148,66 +148,48 @@ export function useMap() {
 
   // 添加城市标记 - 改进点击处理
   const addCityMarkers = useCallback(
-    (cities: City[]) => {
+    (cities: City[], onCityClick?: (cityId: string) => void) => {
       if (!mapInstance || !componentMounted.current) return;
 
       try {
-        const markers: CityMarker[] = cities.map((city) => ({
-          id: city.id,
-          position: city.coordinates,
-          status: city.status,
-          name: city.name,
-          data: city,
-        }));
+        const markers: CityMarker[] = cities.map((city) => {
+          const AMap = (window as any).AMap;
 
-        // 清除现有标记
-        mapInstance.clearMap();
-
-        // 添加新标记
-        markers.forEach((markerData) => {
-          const icon =
-            MARKER_ICONS[markerData.status as keyof typeof MARKER_ICONS];
-          const marker = new (
-            window as typeof window & { AMap: typeof AMap }
-          ).AMap.Marker({
-            position: markerData.position,
-            icon: new (
-              window as typeof window & { AMap: typeof AMap }
-            ).AMap.Icon({
-              imageUrl: icon.url,
-              size: new (
-                window as typeof window & { AMap: typeof AMap }
-              ).AMap.Size(icon.size[0], icon.size[1]),
-              imageOffset: new (
-                window as typeof window & { AMap: typeof AMap }
-              ).AMap.Pixel(0, 0),
-              imageSize: new (
-                window as typeof window & { AMap: typeof AMap }
-              ).AMap.Size(icon.size[0], icon.size[1]),
-            }),
-            title: markerData.name,
-            // 添加标记信息窗口
-            label: {
-              content: markerData.name,
-              direction: "top",
-              offset: [0, -10],
-            },
+          // 创建标记图标
+          const markerIcon =
+            MARKER_ICONS[city.status as keyof typeof MARKER_ICONS];
+          const icon = new AMap.Icon({
+            image: markerIcon.url,
+            size: new AMap.Size(markerIcon.size[0], markerIcon.size[1]),
+            imageSize: new AMap.Size(markerIcon.size[0], markerIcon.size[1]),
           });
 
-          // 添加点击事件 - 改进点击处理，直接跳转到详情页
+          const marker = new AMap.Marker({
+            position: city.coordinates,
+            anchor: "bottom-center",
+            offset: new AMap.Pixel(0, 0),
+            icon: icon,
+            title: city.name,
+            extData: { cityId: city.id },
+          });
+
+          // 绑定点击事件
           marker.on("click", () => {
-            // 设置选中标记
-            setMapState((prev) => ({ ...prev, selectedMarker: markerData }));
-
-            // 平滑移动到标记位置
-            mapInstance.setCenter(markerData.position);
-            mapInstance.setZoom(14);
-
-            // 立即跳转到详情页
-            window.location.href = `/city/${markerData.id}`;
+            console.log(`点击城市标记: ${city.name} (ID: ${city.id})`);
+            if (onCityClick) {
+              onCityClick(city.id);
+            }
           });
 
-          mapInstance.add(marker);
+          return {
+            data: city,
+            marker: marker,
+          };
+        });
+
+        // 添加所有标记到地图
+        markers.forEach((cityMarker) => {
+          mapInstance.add(cityMarker.marker);
         });
 
         setMapState((prev) => ({ ...prev, markers }));

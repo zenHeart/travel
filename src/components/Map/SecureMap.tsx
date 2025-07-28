@@ -1,27 +1,27 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useMap } from '../../hooks/useMap';
-import { useCities } from '../../hooks/useCities';
-import { LoadingSpinner } from '../Common/LoadingSpinner';
-import { CityCard } from './CityCard';
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { useMap } from "../../hooks/useMap";
+import { useCities } from "../../hooks/useCities";
+import { LoadingSpinner } from "../Common/LoadingSpinner";
+import { CityCard } from "./CityCard";
 
 interface SecureMapProps {
   onMapError?: (error: string) => void;
 }
 
-export const SecureMap: React.FC<SecureMapProps> = ({ 
-  onMapError 
-}) => {
+export const SecureMap: React.FC<SecureMapProps> = ({ onMapError }) => {
+  const navigate = useNavigate();
   const { cities, loading: citiesLoading } = useCities();
-  const { 
-    mapState, 
-    addCityMarkers, 
-    clearSelectedMarker, 
+  const {
+    mapState,
+    addCityMarkers,
+    clearSelectedMarker,
     retryMapLoad,
     retryCount,
     startMapInit,
-    setCitiesData
+    setCitiesData,
   } = useMap();
-  
+
   const [error, setError] = useState<string | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const initStarted = useRef(false);
@@ -29,25 +29,36 @@ export const SecureMap: React.FC<SecureMapProps> = ({
   // 处理地图错误
   useEffect(() => {
     if (mapState.error) {
-      console.error('地图错误:', mapState.error);
+      console.error("地图错误:", mapState.error);
       setError(mapState.error);
       onMapError?.(mapState.error);
     }
   }, [mapState.error, onMapError]);
 
+  // 城市点击处理函数
+  const handleCityClick = (cityId: string) => {
+    console.log(`导航到城市: ${cityId}`);
+    navigate(`/city/${cityId}`);
+  };
+
   // 当城市数据加载完成时，传递给地图hook并添加标记
   useEffect(() => {
     // 传递城市数据给地图hook用于默认定位
     setCitiesData(cities);
-    
+
     if (mapState.isLoaded && cities.length > 0) {
-      addCityMarkers(cities);
+      addCityMarkers(cities, handleCityClick);
     }
-  }, [mapState.isLoaded, cities, addCityMarkers, setCitiesData]);
+  }, [mapState.isLoaded, cities, addCityMarkers, setCitiesData, navigate]);
 
   // 当城市数据可用时，触发地图初始化
   useEffect(() => {
-    if (cities.length > 0 && !mapState.isLoaded && !mapState.isLoading && !initStarted.current) {
+    if (
+      cities.length > 0 &&
+      !mapState.isLoaded &&
+      !mapState.isLoading &&
+      !initStarted.current
+    ) {
       initStarted.current = true;
       requestAnimationFrame(() => {
         startMapInit();
@@ -59,22 +70,23 @@ export const SecureMap: React.FC<SecureMapProps> = ({
   useEffect(() => {
     // 只有在未开始初始化、地图未加载且未加载中时才启动
     // 优先等待城市数据加载完成
-    if (!initStarted.current && 
-        !mapState.isLoading && 
-        !mapState.isLoaded &&
-        mapContainerRef.current &&
-        cities.length === 0) { // 如果没有城市数据，使用备用初始化
-      
+    if (
+      !initStarted.current &&
+      !mapState.isLoading &&
+      !mapState.isLoaded &&
+      mapContainerRef.current &&
+      cities.length === 0
+    ) {
+      // 如果没有城市数据，使用备用初始化
+
       initStarted.current = true;
-      
+
       // 使用 requestAnimationFrame 确保DOM完全准备好
       requestAnimationFrame(() => {
         startMapInit();
       });
     }
   }, [startMapInit, mapState.isLoading, mapState.isLoaded, cities.length]);
-
-
 
   // 处理地图点击
   const handleMapClick = () => {
@@ -94,28 +106,24 @@ export const SecureMap: React.FC<SecureMapProps> = ({
       <div className="flex flex-col items-center justify-center min-h-screen p-8">
         <div className="text-red-500 text-6xl mb-4">🗺️</div>
         <h2 className="text-2xl font-bold text-gray-900 mb-4">地图加载失败</h2>
-        <p className="text-gray-600 mb-6 text-center max-w-md">
-          {error}
-        </p>
+        <p className="text-gray-600 mb-6 text-center max-w-md">{error}</p>
         <div className="space-x-4">
-          <button 
+          <button
             onClick={handleRetry}
             className="btn-primary btn-mobile"
             disabled={retryCount >= 3}
           >
-            {retryCount >= 3 ? '重试次数已达上限' : '重试加载'}
+            {retryCount >= 3 ? "重试次数已达上限" : "重试加载"}
           </button>
-          <button 
-            onClick={() => window.location.reload()} 
+          <button
+            onClick={() => window.location.reload()}
             className="btn-secondary btn-mobile"
           >
             刷新页面
           </button>
         </div>
         {retryCount > 0 && (
-          <p className="text-sm text-gray-500 mt-4">
-            已重试 {retryCount} 次
-          </p>
+          <p className="text-sm text-gray-500 mt-4">已重试 {retryCount} 次</p>
         )}
       </div>
     );
@@ -124,31 +132,29 @@ export const SecureMap: React.FC<SecureMapProps> = ({
   return (
     <div className="relative w-full h-full">
       {/* 地图容器 - 占满整个容器 */}
-      <div 
+      <div
         ref={mapContainerRef}
         id="map-container"
         className="map-container"
         onClick={handleMapClick}
       />
-      
+
       {/* 加载状态覆盖层 */}
       {(citiesLoading || mapState.isLoading) && (
         <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-20">
           <LoadingSpinner message="正在加载地图..." />
         </div>
       )}
-      
+
       {/* 城市卡片 - 悬浮在地图上 */}
       {mapState.selectedMarker && (
         <div className="absolute top-4 right-4 z-30 md:max-w-sm w-full max-w-[calc(100vw-2rem)]">
-          <CityCard 
+          <CityCard
             city={mapState.selectedMarker.data}
             onClose={clearSelectedMarker}
           />
         </div>
       )}
-      
-
     </div>
   );
-}; 
+};
