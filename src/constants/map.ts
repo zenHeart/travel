@@ -37,7 +37,8 @@ export const MARKER_ICONS = {
       <svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
         <ellipse cx="16" cy="37" rx="8" ry="3" fill="rgba(0,0,0,0.2)"/>
         <path d="M16 2C10.477 2 6 6.477 6 12C6 20 16 36 16 36S26 20 26 12C26 6.477 21.523 2 16 2Z" fill="#10B981" stroke="#ffffff" stroke-width="2"/>
-        <path d="M12 12L14.5 14.5L20 9" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="16" cy="12" r="6" fill="#ffffff" fill-opacity="0.9"/>
+        <path d="M13 12L15 14L19 10" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     `),
     size: [32, 40],
@@ -51,8 +52,10 @@ export const MARKER_ICONS = {
       <svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
         <ellipse cx="16" cy="37" rx="8" ry="3" fill="rgba(0,0,0,0.2)"/>
         <path d="M16 2C10.477 2 6 6.477 6 12C6 20 16 36 16 36S26 20 26 12C26 6.477 21.523 2 16 2Z" fill="#F59E0B" stroke="#ffffff" stroke-width="2"/>
-        <circle cx="16" cy="12" r="5" fill="none" stroke="#ffffff" stroke-width="1.5"/>
-        <path d="M16 9V12L18 14" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="12" y="8" width="8" height="8" rx="1" fill="#ffffff" fill-opacity="0.9"/>
+        <rect x="13" y="10" width="6" height="1" fill="#F59E0B"/>
+        <rect x="13" y="12" width="4" height="1" fill="#F59E0B"/>
+        <rect x="13" y="14" width="5" height="1" fill="#F59E0B"/>
       </svg>
     `),
     size: [32, 40],
@@ -66,7 +69,8 @@ export const MARKER_ICONS = {
       <svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
         <ellipse cx="16" cy="37" rx="8" ry="3" fill="rgba(0,0,0,0.2)"/>
         <path d="M16 2C10.477 2 6 6.477 6 12C6 20 16 36 16 36S26 20 26 12C26 6.477 21.523 2 16 2Z" fill="#3B82F6" stroke="#ffffff" stroke-width="2"/>
-        <path d="M16 18C16 18 20.5 14.5 20.5 11.5C20.5 9.5 19 8 16.5 8C16 8 16 8 16 8C16 8 16 8 15.5 8C13 8 11.5 9.5 11.5 11.5C11.5 14.5 16 18 16 18Z" fill="#ffffff"/>
+        <path d="M16 15.5L13 13L11.5 14.5L16 19L20.5 14.5L19 13L16 15.5Z" fill="#ffffff"/>
+        <path d="M16 9.5L19 7L20.5 8.5L16 13L11.5 8.5L13 7L16 9.5Z" fill="#ffffff"/>
       </svg>
     `),
     size: [32, 40],
