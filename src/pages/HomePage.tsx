@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useCities } from '../hooks/useCities';
-import { SecureMap } from '../components/Map/SecureMap';
-import { LoadingSpinner } from '../components/Common/LoadingSpinner';
-import { EmptyState } from '../components/Common/EmptyState';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useCities } from "../hooks/useCities";
+import { SecureMap } from "../components/Map/SecureMap";
+import { LoadingSpinner } from "../components/Common/LoadingSpinner";
+import { EmptyState } from "../components/Common/EmptyState";
 
 export const HomePage: React.FC = () => {
   const { cities, loading, error, getCitiesByStatus } = useCities();
@@ -24,9 +24,9 @@ export const HomePage: React.FC = () => {
     );
   }
 
-  const visitedCities = getCitiesByStatus('visited');
-  const plannedCities = getCitiesByStatus('planned');
-  const wishlistCities = getCitiesByStatus('wishlist');
+  const visitedCities = getCitiesByStatus("visited");
+  const plannedCities = getCitiesByStatus("planned");
+  const wishlistCities = getCitiesByStatus("wishlist");
 
   const handleCityClick = (cityId: string) => {
     navigate(`/city/${cityId}`);
@@ -37,7 +37,9 @@ export const HomePage: React.FC = () => {
       {/* 顶部工具栏 - 包含城市列表按钮 */}
       <div className="bg-white shadow-sm p-2 z-30 relative">
         <div className="flex justify-between items-center">
-          <h1 className="text-xl md:text-2xl font-bold text-gray-900">我的旅行地图</h1>
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900">
+            我的旅行地图
+          </h1>
           <div className="flex items-center space-x-2">
             {/* 城市列表按钮 - 作为自定义工具 */}
             <button
@@ -53,9 +55,9 @@ export const HomePage: React.FC = () => {
 
       {/* 主要内容区域 - 地图占满剩余空间 */}
       <div className="flex-1 relative w-full">
-        <SecureMap 
+        <SecureMap
           onMapError={(error) => {
-            console.error('地图加载错误:', error);
+            console.error("地图加载错误:", error);
           }}
         />
 
@@ -73,29 +75,6 @@ export const HomePage: React.FC = () => {
                     ✕
                   </button>
                 </div>
-                
-                {/* 已访问城市 */}
-                <div className="mb-6">
-                  <h3 className="text-md font-medium text-success mb-3">
-                    已访问城市 ({visitedCities.length})
-                  </h3>
-                  {visitedCities.length > 0 ? (
-                    <div className="space-y-2">
-                      {visitedCities.map(city => (
-                        <div 
-                          key={city.id} 
-                          className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
-                          onClick={() => handleCityClick(city.id)}
-                        >
-                          <h4 className="font-medium">{city.name}</h4>
-                          <p className="text-sm text-gray-600">{city.visitDate}</p>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <EmptyState type="visited" />
-                  )}
-                </div>
 
                 {/* 计划中城市 */}
                 <div className="mb-6">
@@ -104,9 +83,9 @@ export const HomePage: React.FC = () => {
                   </h3>
                   {plannedCities.length > 0 ? (
                     <div className="space-y-2">
-                      {plannedCities.map(city => (
-                        <div 
-                          key={city.id} 
+                      {plannedCities.map((city) => (
+                        <div
+                          key={city.id}
                           className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
                           onClick={() => handleCityClick(city.id)}
                         >
@@ -127,9 +106,9 @@ export const HomePage: React.FC = () => {
                   </h3>
                   {wishlistCities.length > 0 ? (
                     <div className="space-y-2">
-                      {wishlistCities.map(city => (
-                        <div 
-                          key={city.id} 
+                      {wishlistCities.map((city) => (
+                        <div
+                          key={city.id}
                           className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
                           onClick={() => handleCityClick(city.id)}
                         >
@@ -142,13 +121,36 @@ export const HomePage: React.FC = () => {
                     <EmptyState type="wishlist" />
                   )}
                 </div>
+
+                {/* 已访问城市 */}
+                <div className="mb-6">
+                  <h3 className="text-md font-medium text-success mb-3">
+                    已访问城市 ({visitedCities.length})
+                  </h3>
+                  {visitedCities.length > 0 ? (
+                    <div className="space-y-2">
+                      {visitedCities.map((city) => (
+                        <div
+                          key={city.id}
+                          className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
+                          onClick={() => handleCityClick(city.id)}
+                        >
+                          <h4 className="font-medium">{city.name}</h4>
+                          <p className="text-sm text-gray-600">
+                            {city.visitDate}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <EmptyState type="visited" />
+                  )}
+                </div>
               </div>
             </div>
           </div>
         )}
       </div>
-
-
     </div>
   );
-}; 
+};
