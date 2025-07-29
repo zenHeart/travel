@@ -99,34 +99,25 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
               const resolvedSrc = src ? resolveImagePath(src) : "";
 
               return (
-                <div className="my-4">
-                  <img
-                    {...props}
-                    src={resolvedSrc}
-                    alt={alt}
-                    className="max-w-full h-auto rounded-lg shadow-md cursor-pointer hover:shadow-lg transition-shadow duration-200"
-                    onClick={() => setPreviewImage({ src: resolvedSrc, alt })}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = "none";
-                      const errorDiv = document.createElement("div");
-                      errorDiv.className =
-                        "p-4 bg-gray-100 rounded-lg text-center text-gray-500";
-                      errorDiv.textContent = `图片加载失败: ${
-                        alt || "未知图片"
-                      }`;
-                      target.parentNode?.insertBefore(errorDiv, target);
-                    }}
-                    onLoad={() => {
-                      console.log("图片加载成功:", resolvedSrc);
-                    }}
-                  />
-                  {alt && (
-                    <p className="text-sm text-gray-500 mt-2 text-center">
-                      {alt}
-                    </p>
-                  )}
-                </div>
+                <img
+                  {...props}
+                  src={resolvedSrc}
+                  alt={alt}
+                  className="max-w-full h-auto rounded-lg shadow-md cursor-pointer hover:shadow-lg transition-shadow duration-200 my-4 block"
+                  onClick={() => setPreviewImage({ src: resolvedSrc, alt })}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = "none";
+                    const errorDiv = document.createElement("div");
+                    errorDiv.className =
+                      "p-4 bg-gray-100 rounded-lg text-center text-gray-500 my-4";
+                    errorDiv.textContent = `图片加载失败: ${alt || "未知图片"}`;
+                    target.parentNode?.insertBefore(errorDiv, target);
+                  }}
+                  onLoad={() => {
+                    console.log("图片加载成功:", resolvedSrc);
+                  }}
+                />
               );
             },
             // 自定义标题样式

@@ -98,11 +98,25 @@ export const ImagePreview: React.FC<ImagePreviewProps> = ({
     };
   }, [isDragging, dragStart]);
 
-  const handleWheel = (e: React.WheelEvent) => {
-    e.preventDefault();
-    const delta = e.deltaY > 0 ? 0.9 : 1.1;
-    setScale((prev) => Math.max(0.5, Math.min(5, prev * delta)));
-  };
+  // 手动添加wheel事件监听器以避免被动事件监听器问题
+  useEffect(() => {
+    const handleWheelEvent = (e: WheelEvent) => {
+      if (isOpen) {
+        e.preventDefault();
+        const delta = e.deltaY > 0 ? 0.9 : 1.1;
+        setScale((prev) => Math.max(0.5, Math.min(5, prev * delta)));
+      }
+    };
+
+    if (isOpen) {
+      // 添加非被动的wheel事件监听器
+      document.addEventListener("wheel", handleWheelEvent, { passive: false });
+    }
+
+    return () => {
+      document.removeEventListener("wheel", handleWheelEvent);
+    };
+  }, [isOpen]);
 
   // 计算两点之间的距离
   const getDistance = (touch1: React.Touch, touch2: React.Touch) => {
@@ -196,7 +210,6 @@ export const ImagePreview: React.FC<ImagePreviewProps> = ({
             transition: isDragging ? "none" : "transform 0.2s ease-out",
           }}
           onMouseDown={handleMouseDown}
-          onWheel={handleWheel}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
