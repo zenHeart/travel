@@ -5,13 +5,6 @@ coordinates: [106.5478, 29.5647]
 tags: []
 date: 2025-07-28
 layout: blog
----se_name: 重庆
-english_name: Chongqing
-coordinates: [106.5516, 29.563]
-status: visited
-tags: []
-date: 2025-07-28
-layout: blog
 ---
 
 # 重庆
