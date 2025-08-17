@@ -128,25 +128,38 @@ export class ContentScanner {
       const relatedFiles: MarkdownFile[] = [];
       try {
         const detailModules = import.meta.glob(
-          "/content/cities/*/*/detail.md",
+          "/content/cities/*/*/*.md", // Changed to .md to scan all markdown files
           {
             eager: true,
             as: "raw",
           }
         );
 
-        const detailPath = `/content/cities/${status}/${cityId}/detail.md`;
-        if (detailModules[detailPath]) {
-          relatedFiles.push({
-            name: "detail.md",
-            path: `/content/cities/${status}/${cityId}/detail.md`,
-            title: "详细攻略",
-            content: detailModules[detailPath] as string,
-            lastModified: new Date().toISOString(),
-          });
+        for (const [filePath, fileContent] of Object.entries(detailModules)) {
+          const pathParts = filePath.split("/");
+          const fileStatus = pathParts[3] as "visited" | "planned" | "wishlist";
+          const fileCityId = pathParts[4];
+
+          if (fileCityId === cityId && fileStatus === status) {
+            const fileName = pathParts[5];
+
+            // 排除 index.md，保持现有的 index.md 处理逻辑不变
+            if (fileName === "index.md") {
+              continue;
+            }
+
+            const fileTitle = this.extractFirstHeading(fileContent as string);
+            relatedFiles.push({
+              name: fileName,
+              path: `/content/cities/${status}/${cityId}/${fileName}`,
+              title: fileTitle,
+              content: fileContent as string,
+              lastModified: new Date().toISOString(),
+            });
+          }
         }
-      } catch {
-        // 如果没有detail.md文件，忽略错误
+      } catch (error) {
+        console.warn(`扫描相关文件时出错:`, error);
       }
 
       // 读取图片文件
@@ -264,6 +277,28 @@ export class ContentScanner {
     }
 
     return links;
+  }
+
+  /**
+   * 从 Markdown 内容中提取第一个一级标题
+   * @param content Markdown 文件内容
+   * @returns 提取的一级标题，如果没有找到则返回默认值
+   */
+  private extractFirstHeading(content: string): string {
+    // 匹配第一个一级标题 # 标题内容
+    const headingMatch = content.match(/^#\s+(.+)$/m);
+
+    if (headingMatch && headingMatch[1]) {
+      // 去除标题中的markdown语法，如加粗、斜体等
+      return headingMatch[1]
+        .replace(/\*\*([^*]+)\*\*/g, "$1") // 移除加粗
+        .replace(/\*([^*]+)\*/g, "$1") // 移除斜体
+        .replace(/`([^`]+)`/g, "$1") // 移除行内代码
+        .trim();
+    }
+
+    // 如果没有找到一级标题，返回默认值
+    return "内容";
   }
 
   private extractVisitDate(content: string): string | undefined {
