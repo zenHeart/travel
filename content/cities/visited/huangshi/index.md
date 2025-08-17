@@ -7,9 +7,9 @@ tags: travel_plan
 date: 2025-08-16
 ---
 
-# 黄石
+# 黄石 2 日游
 
-2 日游
+![](./cover.jpg)
 
 ## 行程安排
 
