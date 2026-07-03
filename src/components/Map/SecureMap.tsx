@@ -4,6 +4,7 @@ import { useMap } from "../../hooks/useMap";
 import { useCities } from "../../hooks/useCities";
 import { LoadingSpinner } from "../Common/LoadingSpinner";
 import { CityCard } from "./CityCard";
+import { LocalTravelMap } from "./LocalTravelMap";
 
 interface SecureMapProps {
   onMapError?: (error: string) => void;
@@ -103,29 +104,16 @@ export const SecureMap: React.FC<SecureMapProps> = ({ onMapError }) => {
   // 渲染错误状态
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-8">
-        <div className="text-red-500 text-6xl mb-4">🗺️</div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">地图加载失败</h2>
-        <p className="text-gray-600 mb-6 text-center max-w-md">{error}</p>
-        <div className="space-x-4">
-          <button
-            onClick={handleRetry}
-            className="btn-primary btn-mobile"
-            disabled={retryCount >= 3}
-          >
-            {retryCount >= 3 ? "重试次数已达上限" : "重试加载"}
-          </button>
-          <button
-            onClick={() => window.location.reload()}
-            className="btn-secondary btn-mobile"
-          >
-            刷新页面
-          </button>
-        </div>
-        {retryCount > 0 && (
-          <p className="text-sm text-gray-500 mt-4">已重试 {retryCount} 次</p>
-        )}
-      </div>
+      <LocalTravelMap
+        cities={cities}
+        fallbackReason={
+          error === "地图安全验证失败"
+            ? "本地未配置高德地图密钥，已使用本地城市点位。"
+            : error
+        }
+        onRetry={handleRetry}
+        retryDisabled={retryCount >= 3}
+      />
     );
   }
 

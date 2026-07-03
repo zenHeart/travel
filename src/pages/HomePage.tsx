@@ -49,6 +49,13 @@ export const HomePage: React.FC = () => {
             >
               📍 城市列表 ({cities.length})
             </button>
+            <button
+              onClick={() => navigate("/cards/wuhan-tenglv")}
+              className="btn-secondary btn-mobile text-sm"
+              title="腾旅卡"
+            >
+              腾旅卡
+            </button>
           </div>
         </div>
       </div>

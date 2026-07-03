@@ -92,6 +92,22 @@ export const CityDetailPage: React.FC = () => {
             <MarkdownContent files={allFiles} basePath={basePath} />
           </div>
 
+          {city.id === 'wuhan' && (
+            <div className="bg-white rounded-lg shadow-md p-4 md:p-6 mt-6">
+              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <h2 className="text-xl font-semibold">武汉都市圈T卡</h2>
+                </div>
+                <button
+                  onClick={() => navigate('/cards/wuhan-tenglv')}
+                  className="btn-primary btn-mobile"
+                >
+                  查看权益表
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* 内部链接 */}
           {city.links.internal.length > 0 && (
             <div className="bg-white rounded-lg shadow-md p-4 md:p-6 mt-6">
@@ -114,4 +130,4 @@ export const CityDetailPage: React.FC = () => {
       </div>
     </div>
   );
-}; 
+};

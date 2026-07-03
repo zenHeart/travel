@@ -1,6 +1,7 @@
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { HomePage } from './pages/HomePage';
 import { CityDetailPage } from './pages/CityDetailPage';
+import { TenglvCardPage } from './pages/TenglvCardPage';
 import { ErrorBoundary } from './components/Common/ErrorBoundary';
 import './App.css';
 
@@ -12,6 +13,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/city/:id" element={<CityDetailPage />} />
+            <Route path="/cards/wuhan-tenglv" element={<TenglvCardPage />} />
           </Routes>
         </div>
       </Router>
