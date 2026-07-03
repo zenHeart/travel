@@ -138,7 +138,7 @@ check_build() {
 # 本地预览
 preview_build() {
     log "启动本地预览..."
-    info "预览地址: http://localhost:4173/travel/"
+    info "预览地址: http://localhost:4173/"
     info "按 Ctrl+C 停止预览"
     pnpm preview
 }
@@ -168,8 +168,7 @@ deploy_to_github() {
     log "部署完成！"
     info "GitHub Actions 将自动构建和部署"
     info "部署地址:"
-    info "- GitHub Pages: https://zenheart.github.io/travel/"
-    info "- 自定义域名: https://blog.zenheart.site/travel/"
+    info "- 自定义域名: https://travel.zenheart.site/"
 }
 
 # 显示帮助信息
@@ -264,4 +263,4 @@ main() {
 }
 
 # 运行主函数
-main "$@" 
+main "$@"

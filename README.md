@@ -57,8 +57,7 @@ pnpm deploy
 
 部署完成后可通过以下地址访问：
 
-- **GitHub Pages**: <https://zenheart.github.io/travel/>
-- **自定义域名**: <https://blog.zenheart.site/travel/>
+- **自定义域名**: <https://travel.zenheart.site/>
 
 ## 开发命令
 

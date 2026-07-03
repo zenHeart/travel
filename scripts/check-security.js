@@ -155,8 +155,7 @@ function main() {
   if (allPassed) {
     log('所有检查通过！');
     log('部署信息:');
-    log('- GitHub Pages: https://zenheart.github.io/travel/');
-    log('- 自定义域名: https://blog.zenheart.site/travel/');
+    log('- 自定义域名: https://travel.zenheart.site/');
     process.exit(0);
   } else {
     error('检查失败，请修复上述问题');
@@ -173,4 +172,4 @@ export {
   checkEnvironmentVariables,
   checkBuildConfig,
   checkRouterConfig
-}; 
+};

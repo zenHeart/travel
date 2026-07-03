@@ -65,7 +65,7 @@
 ### 7. 部署配置
 
 - **平台**: GitHub Pages
-- **域名**: blog.zenheart.site/travel/
+- **域名**: travel.zenheart.site/
 - **HTTPS**: 支持 HTTPS 访问
 - **自定义域名**: 配置自定义域名
 
@@ -503,7 +503,7 @@ layout: blog # 可选：布局类型
 - [x] 配置 TypeScript 5.8
 - [x] 集成 Tailwind CSS 4.1.11
 - [x] 配置 ESLint 和 Prettier
-- [x] 设置 GitHub Pages 部署（blog.zenheart.site/travel/）
+- [x] 设置 GitHub Pages 部署（travel.zenheart.site/）
 - [x] 配置环境变量
 
 #### 2. 内容扫描系统 (P0)
@@ -602,7 +602,7 @@ layout: blog # 可选：布局类型
 
 - [x] 配置 GitHub Actions CI/CD
 - [x] 设置 GitHub Pages
-- [x] 配置自定义域名（blog.zenheart.site/travel/）
+- [x] 配置自定义域名（travel.zenheart.site/）
 - [ ] 添加 SEO 优化
 - [x] 配置 HTTPS
 
@@ -740,7 +740,7 @@ layout: blog # 可选：布局类型
 
 - 优势：免费、集成 CI/CD、支持自定义域名
 - 配置：通过.github/workflows/deploy.yml 自动部署
-- 域名：blog.zenheart.site/travel/
+- 域名：travel.zenheart.site/
 
 ### 开发工具
 
@@ -784,7 +784,7 @@ layout: blog # 可选：布局类型
 ### 部署配置
 
 1. **GitHub Pages**: 配置自动部署 ✅
-2. **自定义域名**: blog.zenheart.site/travel/ ✅
+2. **自定义域名**: travel.zenheart.site/ ✅
 3. **HTTPS 支持**: 确保 HTTPS 访问 ✅
 4. **性能优化**: 静态资源优化
 

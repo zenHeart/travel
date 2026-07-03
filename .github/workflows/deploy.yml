@@ -17,7 +17,7 @@ permissions:
 env:
   VITE_APP_TITLE: "旅行地图"
   VITE_APP_DESCRIPTION: "我的旅行记录地图"
-  VITE_BASE_URL: "/travel/"
+  VITE_BASE_URL: "/"
 
 jobs:
   # 代码检查
@@ -94,7 +94,7 @@ jobs:
         env:
           VITE_AMAP_API_KEY: ${{ secrets.AMAP_API_KEY }}
           VITE_AMAP_SECURITY_JS_CODE: ${{ secrets.AMAP_SECURITY_JS_CODE }}
-          VITE_BASE_URL: "/travel/"
+          VITE_BASE_URL: "/"
         run: pnpm build
 
       - name: Copy content assets

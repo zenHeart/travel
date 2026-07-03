@@ -80,12 +80,27 @@ function checkBuildOutput() {
   
   // 检查 index.html 内容
   const indexHtml = fs.readFileSync(indexHtmlPath, 'utf8');
+  let outputValid = true;
   
   // 检查基础路径配置
   if (indexHtml.includes('/travel/')) {
-    log('✓ 基础路径配置正确');
+    error('基础路径仍包含 /travel/，会影响自定义域名根路径部署');
+    outputValid = false;
   } else {
-    warn('基础路径可能未正确配置');
+    log('✓ 基础路径配置为根路径');
+  }
+
+  const cnamePath = path.join(distPath, 'CNAME');
+  if (checkFile(cnamePath, 'CNAME')) {
+    const cname = fs.readFileSync(cnamePath, 'utf8').trim();
+    if (cname === 'travel.zenheart.site') {
+      log('✓ 自定义域名配置正确');
+    } else {
+      error(`CNAME 内容为 ${cname}，预期为 travel.zenheart.site`);
+      outputValid = false;
+    }
+  } else {
+    outputValid = false;
   }
   
   // 检查资源文件
@@ -95,6 +110,10 @@ function checkBuildOutput() {
     log(`✓ 找到 ${assets.length} 个资源文件`);
   }
   
+  if (!outputValid) {
+    return false;
+  }
+
   log('构建输出检查通过');
   return true;
 }
@@ -149,4 +168,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   main();
 }
 
-export { main as testBuild }; 
+export { main as testBuild };
