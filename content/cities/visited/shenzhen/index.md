@@ -91,4 +91,4 @@ layout: blog
 
 ## 附录
 
-- [方案详解](./detail.md)
+- [方案详解](./nanao.md)
