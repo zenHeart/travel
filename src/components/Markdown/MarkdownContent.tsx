@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MarkdownRenderer } from './MarkdownRenderer';
 import { TabNavigation } from './TabNavigation';
 import { MarkdownFile } from '../../types/city';
@@ -7,14 +7,25 @@ interface MarkdownContentProps {
   files: MarkdownFile[];
   className?: string;
   basePath?: string; // 添加basePath参数
+  initialFile?: string; // 指定初始展开的文件名，用于从地图子点位直达
 }
 
 export const MarkdownContent: React.FC<MarkdownContentProps> = ({
   files,
   className = '',
-  basePath = ''
+  basePath = '',
+  initialFile
 }) => {
-  const [activeFile, setActiveFile] = useState(files[0]?.name || '');
+  const [activeFile, setActiveFile] = useState(
+    initialFile || files[0]?.name || ''
+  );
+
+  // 路由上的目标文件变化时（例如从地图点了另一个子地点），切换到对应 tab
+  useEffect(() => {
+    if (initialFile) {
+      setActiveFile(initialFile);
+    }
+  }, [initialFile]);
 
   if (files.length === 0) {
     return (

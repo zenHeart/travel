@@ -26,6 +26,42 @@ const checkMapContainer = (): boolean => {
   return true;
 };
 
+// 把城市与其子地点展开成地图点位
+// 城市 -> /city/:id；子地点 -> /city/:id/:slug（直接打开对应 tab）
+interface MapPoint {
+  label: string;
+  coordinates: [number, number];
+  status: City["status"];
+  path: string;
+  city: City;
+}
+
+const buildMapPoints = (cities: City[]): MapPoint[] => {
+  const points: MapPoint[] = [];
+
+  cities.forEach((city) => {
+    points.push({
+      label: city.name,
+      coordinates: city.coordinates,
+      status: city.status,
+      path: `/city/${city.id}`,
+      city,
+    });
+
+    (city.subLocations || []).forEach((sub) => {
+      points.push({
+        label: sub.name,
+        coordinates: sub.coordinates,
+        status: city.status,
+        path: `/city/${city.id}/${sub.slug}`,
+        city,
+      });
+    });
+  });
+
+  return points;
+};
+
 // 获取最近访问的城市
 const getMostRecentVisitedCity = (cities: City[]): City | null => {
   const visitedCities = cities.filter((city) => city.status === "visited");
@@ -148,17 +184,19 @@ export function useMap() {
 
   // 添加城市标记 - 改进点击处理
   const addCityMarkers = useCallback(
-    (cities: City[], onCityClick?: (cityId: string) => void) => {
+    (cities: City[], onPointClick?: (path: string) => void) => {
       if (!mapInstance || !componentMounted.current) return;
 
       try {
-        const markers: CityMarker[] = cities.map((city) => {
+        const points = buildMapPoints(cities);
+
+        const markers: CityMarker[] = points.map((point) => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const AMap = (window as any).AMap;
 
           // 创建标记图标
           const markerIcon =
-            MARKER_ICONS[city.status as keyof typeof MARKER_ICONS];
+            MARKER_ICONS[point.status as keyof typeof MARKER_ICONS];
           const icon = new AMap.Icon({
             image: markerIcon.url,
             size: new AMap.Size(markerIcon.size[0], markerIcon.size[1]),
@@ -166,15 +204,15 @@ export function useMap() {
           });
 
           const marker = new AMap.Marker({
-            position: city.coordinates,
+            position: point.coordinates,
             anchor: "bottom-center",
             offset: new AMap.Pixel(0, 0),
             icon: icon,
-            title: city.name,
-            extData: { cityId: city.id },
-            // 添加城市名称标签
+            title: point.label,
+            extData: { path: point.path },
+            // 添加名称标签
             label: {
-              content: city.name,
+              content: point.label,
               direction: "bottom",
               offset: new AMap.Pixel(0, 5),
               style: {
@@ -193,17 +231,19 @@ export function useMap() {
             },
           });
 
-          // 绑定点击事件
+          // 绑定点击事件：直接跳到该点位对应的页面/tab
           marker.on("click", () => {
-            console.log(`点击城市标记: ${city.name} (ID: ${city.id})`);
-            if (onCityClick) {
-              onCityClick(city.id);
+            console.log(`点击标记: ${point.label} -> ${point.path}`);
+            if (onPointClick) {
+              onPointClick(point.path);
             }
           });
 
           return {
-            data: city,
+            data: point.city,
             marker: marker,
+            path: point.path,
+            label: point.label,
           };
         });
 

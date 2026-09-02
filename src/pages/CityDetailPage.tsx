@@ -5,7 +5,7 @@ import { LoadingSpinner } from '../components/Common/LoadingSpinner';
 import { MarkdownContent } from '../components/Markdown/MarkdownContent';
 
 export const CityDetailPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id, file } = useParams<{ id: string; file?: string }>();
   const navigate = useNavigate();
   const { getCityById, loading } = useCities();
 
@@ -59,7 +59,18 @@ export const CityDetailPage: React.FC = () => {
 
   // 合并所有Markdown文件
   const allFiles = [city.files.index, ...city.files.related];
-  
+
+  // 路由带了 :file 时（从地图子点位进来），直接展开对应 tab
+  const targetFileName = file ? `${file}.md` : undefined;
+  const initialFile = allFiles.some((f) => f.name === targetFileName)
+    ? targetFileName
+    : undefined;
+
+  // 子地点进来时，标题显示子地点名
+  const subLocation = file
+    ? city.subLocations.find((sub) => sub.slug === file)
+    : undefined;
+
   // 构建basePath
   const basePath = `${city.status}/${city.id}`;
 
@@ -75,7 +86,9 @@ export const CityDetailPage: React.FC = () => {
             >
               ← 返回首页
             </button>
-            <h1 className="text-xl md:text-2xl font-bold text-gray-900">{city.name}</h1>
+            <h1 className="text-xl md:text-2xl font-bold text-gray-900">
+              {subLocation ? `${city.name} · ${subLocation.name}` : city.name}
+            </h1>
             <span className={`px-2 py-1 rounded-full text-sm font-medium ${getStatusColor(city.status)}`}>
               {getStatusText(city.status)}
             </span>
@@ -89,7 +102,11 @@ export const CityDetailPage: React.FC = () => {
           {/* Markdown内容 - 移除外部容器间距，确保移动端宽度占满 */}
           <div className="bg-white rounded-lg shadow-md p-4 md:p-6">
             <h2 className="text-xl font-semibold mb-4">详细攻略</h2>
-            <MarkdownContent files={allFiles} basePath={basePath} />
+            <MarkdownContent
+              files={allFiles}
+              basePath={basePath}
+              initialFile={initialFile}
+            />
           </div>
 
           {city.id === 'wuhan' && (

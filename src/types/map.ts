@@ -9,6 +9,10 @@ export interface MapConfig {
 export interface CityMarker {
   data: City;
   marker: unknown;
+  // 该点位的跳转路径：城市为 /city/:id，子地点为 /city/:id/:slug
+  path: string;
+  // 点位显示名（子地点用自己的名字，而不是所属城市名）
+  label: string;
 }
 
 export interface MapState {

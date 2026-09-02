@@ -12,6 +12,7 @@ export interface City {
   highlights: string[];
   budget?: string;
   contentPath: string;
+  subLocations: SubLocation[];
   files: {
     index: MarkdownFile;
     related: MarkdownFile[];
@@ -22,6 +23,18 @@ export interface City {
     external: ExternalLink[];
   };
   metadata?: CityMetadata;
+}
+
+// 子地点：城市目录下带 coordinates 的关联 Markdown 文件
+// 会在地图上单独成点，点击直达该文件对应的 tab
+export interface SubLocation {
+  cityId: string;
+  status: "visited" | "planned" | "wishlist";
+  fileName: string;
+  slug: string;
+  name: string;
+  englishName?: string;
+  coordinates: [number, number];
 }
 
 export interface MarkdownFile {

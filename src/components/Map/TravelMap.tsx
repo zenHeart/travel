@@ -1,10 +1,12 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCities } from '../../hooks/useCities';
 import { useMap } from '../../hooks/useMap';
 import { LoadingSpinner } from '../Common/LoadingSpinner';
 import { CityCard } from './CityCard';
 
 export const TravelMap: React.FC = () => {
+  const navigate = useNavigate();
   const { cities, loading: citiesLoading } = useCities();
   const { 
     mapState, 
@@ -15,12 +17,20 @@ export const TravelMap: React.FC = () => {
   } = useMap();
   const mapContainerRef = useRef<HTMLDivElement>(null);
 
+  // 点击标记直接跳转：城市 -> /city/:id，子地点 -> /city/:id/:slug
+  const handlePointClick = useCallback(
+    (path: string) => {
+      navigate(path);
+    },
+    [navigate]
+  );
+
   // 当城市数据加载完成时，添加标记
   useEffect(() => {
     if (mapState.isLoaded && cities.length > 0) {
-      addCityMarkers(cities);
+      addCityMarkers(cities, handlePointClick);
     }
-  }, [mapState.isLoaded, cities, addCityMarkers]);
+  }, [mapState.isLoaded, cities, addCityMarkers, handlePointClick]);
 
 
 
@@ -92,7 +102,7 @@ export const TravelMap: React.FC = () => {
       <div className="absolute bottom-4 left-4 bg-white bg-opacity-90 rounded-lg p-2 text-sm">
         <div className="flex items-center space-x-2">
           <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-          <span>已加载 {cities.length} 个城市</span>
+          <span>已加载 {mapState.markers.length} 个点位 / {cities.length} 个城市</span>
         </div>
       </div>
     </div>

@@ -13,6 +13,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/city/:id" element={<CityDetailPage />} />
+            <Route path="/city/:id/:file" element={<CityDetailPage />} />
             <Route path="/cards/wuhan-tenglv" element={<TenglvCardPage />} />
           </Routes>
         </div>

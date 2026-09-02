@@ -4,6 +4,7 @@ import {
   InternalLink,
   ImageFile,
   CityFrontmatter,
+  SubLocation,
 } from "../types/city";
 import yaml from "js-yaml";
 
@@ -126,6 +127,7 @@ export class ContentScanner {
 
       // 尝试读取相关文件
       const relatedFiles: MarkdownFile[] = [];
+      const subLocations: SubLocation[] = [];
       try {
         const detailModules = import.meta.glob(
           "/content/cities/*/*/*.md", // Changed to .md to scan all markdown files
@@ -148,7 +150,12 @@ export class ContentScanner {
               continue;
             }
 
-            const fileTitle = this.extractFirstHeading(fileContent as string);
+            // 关联文件也可以带 frontmatter：写了 coordinates 就在地图上单独成点
+            const fileFrontmatter = this.parseFrontmatter(fileContent as string);
+            const fileTitle =
+              fileFrontmatter.chinese_name ||
+              this.extractFirstHeading(fileContent as string);
+
             relatedFiles.push({
               name: fileName,
               path: `/content/cities/${status}/${cityId}/${fileName}`,
@@ -156,6 +163,23 @@ export class ContentScanner {
               content: fileContent as string,
               lastModified: new Date().toISOString(),
             });
+
+            const subCoordinates = fileFrontmatter.coordinates;
+            if (
+              Array.isArray(subCoordinates) &&
+              subCoordinates.length === 2 &&
+              fileFrontmatter.chinese_name
+            ) {
+              subLocations.push({
+                cityId,
+                status,
+                fileName,
+                slug: fileName.replace(/\.md$/, ""),
+                name: fileFrontmatter.chinese_name,
+                englishName: fileFrontmatter.english_name,
+                coordinates: subCoordinates,
+              });
+            }
           }
         }
       } catch (error) {
@@ -222,6 +246,7 @@ export class ContentScanner {
         highlights: highlights,
         budget: budget,
         contentPath: `/content/cities/${status}/${cityId}`,
+        subLocations: subLocations,
         files: {
           index: indexFile,
           related: relatedFiles,
