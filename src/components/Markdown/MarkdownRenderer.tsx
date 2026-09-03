@@ -132,7 +132,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
             h2: ({ children, ...props }) => (
               <h2
                 {...props}
-                className="text-2xl font-bold text-gray-900 mb-4 mt-6 text-left"
+                className="scroll-mt-4 text-2xl font-bold text-gray-900 mb-4 mt-8 text-left"
               >
                 {children}
               </h2>
@@ -140,7 +140,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
             h3: ({ children, ...props }) => (
               <h3
                 {...props}
-                className="text-xl font-semibold text-gray-900 mb-3 mt-5 text-left"
+                className="scroll-mt-4 text-xl font-semibold text-gray-900 mb-3 mt-6 text-left"
               >
                 {children}
               </h3>
