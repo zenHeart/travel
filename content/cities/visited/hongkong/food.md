@@ -1,5 +1,7 @@
 # 香港美食
 
+店址与营业时间以 [OpenRice](https://www.openrice.com/zh/hongkong) 核验，价格为人均区间。
+
 住宿在佐敦/尖沙咀，只收这个片区走路或一两站地铁能到的店。
 
 ## 茶餐厅 / 冰室
@@ -46,4 +48,10 @@
 - 很多老店只收现金或八达通
 - 老店没有儿童餐具，自带一套
 - 港澳义顺牛奶（油麻地店）已结业
-- 出发前用 OpenRice 或 Google Maps 再确认营业状态与当日营业时间
+- 出发前用 [OpenRice](https://www.openrice.com/zh/hongkong) 或 Google Maps 再确认营业状态与当日营业时间
+
+## 数据来源
+
+店名、地址、人均与休息日均来自 [OpenRice 香港](https://www.openrice.com/zh/hongkong)店页与近期食评交叉核验；麦文记另见[香港旅发局](https://www.discoverhongkong.com/tc/place-to-go/travel.guide-mak-man-kee-noodle-shop.html)。
+
+香港老店搬迁与结业频繁（港澳义顺牛奶油麻地店已结业即为一例），**出发前务必再核一次**。核验日期：2026-09-03。

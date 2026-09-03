@@ -10,14 +10,14 @@ coordinates: [113.0946, 22.5901]
 
 ## 交通
 
-香港西九龙无直达江门高铁，必在广州南换乘。
+香港西九龙无直达江门高铁，必在广州南换乘。深江铁路计划 2028 年 3 月竣工（[江门市政府](http://www.jiangmen.gov.cn/home/bmdt/content/post_3158801.html)）。
 
 | 区间 | 用时 | 班次 | 票价 |
 | --- | --- | --- | --- |
 | 香港西九龙 → 广州南 | 最快 51 分 | 约 61 班/日 | 约 HK$214 |
 | 广州南 → 江门东 | 最快 25 分 | 约 92 班/日 | 约 ¥37 |
 
-备选：江门航空港 ↔ 深圳宝安机场快线大巴，1h15m 直达，每日 32 班（机场发车 07:00-23:00，江门发车 06:00-21:00），再从深圳走福田/深圳湾口岸。
+备选：江门航空港 ↔ 深圳宝安机场快线大巴，1h15m 直达，每日 32 班（机场发车 07:00-23:00，江门发车 06:00-21:00，[深圳市交通运输局](https://jtys.sz.gov.cn/jtzx/wycx/gjcx/cxtx/content/post_12175622.html)），再从深圳走福田/深圳湾口岸。
 
 ## 09.30（三）香港 → 江门
 
@@ -76,3 +76,14 @@ coordinates: [113.0946, 22.5901]
 3. 江门老店有只收现金的，备人民币现金
 4. 广东 10 月初仍热，防晒补水按夏天准备
 5. 国庆车票紧张，09.16-09.18 提前 15 天开抢
+
+## 数据来源
+
+| 数据 | 来源 |
+| --- | --- |
+| 深江铁路 2028 年竣工 | [江门市政府](http://www.jiangmen.gov.cn/home/bmdt/content/post_3158801.html) |
+| 深圳机场↔江门快线 1h15m、32 班/日 | [深圳市交通运输局](https://jtys.sz.gov.cn/jtzx/wycx/gjcx/cxtx/content/post_12175622.html) |
+| 广州南↔江门东 25 分钟、约 92 班/日 | [Trip.com 班次查询](https://hk.trip.com/trains/china/route/guangzhounan-guangzhou-south-to-jiangmendong-jiangmen-east/) |
+| 五邑风味与古井烧鹅 | [江门市政府 · 侨乡美食](http://www.jiangmen.gov.cn/newzjqx/lyzy/qxms/content/post_3112301.html) |
+
+高铁班次与时刻以 [12306](https://www.12306.cn/) 为准。核验日期：2026-09-03。
