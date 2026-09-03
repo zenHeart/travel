@@ -155,11 +155,13 @@ export class ContentScanner {
             // 关联文件也可以带 frontmatter：写了 coordinates 就在地图上单独成点
             const fileFrontmatter = this.parseFrontmatter(fileContent as string);
             const fileTitle =
+              fileFrontmatter.nav_title ||
               fileFrontmatter.chinese_name ||
               this.extractFirstHeading(fileContent as string);
 
             relatedFiles.push({
               name: fileName,
+              order: fileFrontmatter.order,
               path: `/content/cities/${status}/${cityId}/${fileName}`,
               title: fileTitle,
               content: fileContent as string,
@@ -187,6 +189,14 @@ export class ContentScanner {
       } catch (error) {
         console.warn(`扫描相关文件时出错:`, error);
       }
+
+      // 按 frontmatter 的 order 排序，使分页顺序与行程时间一致；
+      // 没写 order 的排在最后，同级按文件名
+      relatedFiles.sort((a, b) => {
+        const oa = a.order ?? Number.MAX_SAFE_INTEGER;
+        const ob = b.order ?? Number.MAX_SAFE_INTEGER;
+        return oa !== ob ? oa - ob : a.name.localeCompare(b.name);
+      });
 
       // 读取图片文件
       const imageFiles: ImageFile[] = [];

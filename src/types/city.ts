@@ -39,6 +39,8 @@ export interface SubLocation {
 
 export interface MarkdownFile {
   name: string;
+  /** 分页排序 */
+  order?: number;
   path: string;
   content: string;
   metadata?: Record<string, unknown>;
@@ -83,4 +85,8 @@ export interface CityFrontmatter {
   date?: string;
   layout?: string;
   status?: "visited" | "planned" | "wishlist";
+  /** 分页排序，小的在前；缺省排到最后 */
+  order?: number;
+  /** 导航里显示的名字；缺省用 chinese_name 或首个标题 */
+  nav_title?: string;
 }

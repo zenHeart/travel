@@ -23,18 +23,34 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     alt?: string;
   } | null>(null);
 
+  // basePath 形如 "visited/hongkong"，取出城市 id 用于站内跳转
+  const cityId = basePath.split("/")[1] || "";
+
   const handleInternalLink = (href: string) => {
-    // 处理内部链接，格式为 [[城市ID]] 或 [[城市ID|显示文本]]
-    const match = href.match(/^\[\[([^|\]]+)(?:\|([^\]]+))?\]\]$/);
-    if (match) {
-      const cityId = match[1];
-      navigate(`/city/${cityId}`);
+    // [[城市ID]] 或 [[城市ID|显示文本]]
+    const wiki = href.match(/^\[\[([^|\]]+)(?:\|([^\]]+))?\]\]$/);
+    if (wiki) {
+      navigate(`/city/${wiki[1]}`);
       return;
     }
 
-    // 处理普通链接
+    // 页内锚点
+    if (href.startsWith("#")) {
+      const el = document.getElementById(decodeURIComponent(href.slice(1)));
+      el?.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+
+    // 同城市的兄弟文档：./prep.md → /city/hongkong/prep
+    const sibling = href.match(/^\.\/([^/#?]+)\.md(?:#(.*))?$/);
+    if (sibling && cityId) {
+      const slug = sibling[1];
+      navigate(slug === "index" ? `/city/${cityId}` : `/city/${cityId}/${slug}`);
+      return;
+    }
+
     if (href.startsWith("http")) {
-      window.open(href, "_blank");
+      window.open(href, "_blank", "noopener,noreferrer");
     }
   };
 
