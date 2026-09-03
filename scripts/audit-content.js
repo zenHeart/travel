@@ -96,7 +96,9 @@ for (const f of files) {
   for (const m of refSec.matchAll(/^(\d{1,2})\.\s+(.*)$/gm)) {
     const n = Number(m[1]);
     defined.add(n);
-    if (!/\]\(https?:\/\//.test(m[2])) add('ERR', '引用', `${f.full} 来源 [${n}] 不含可点击链接`);
+    // 可点击 = 外链或站内相对链接
+    if (!/\]\((https?:\/\/|\.\/)/.test(m[2]))
+      add('ERR', '引用', `${f.full} 来源 [${n}] 不含可点击链接`);
   }
   for (const n of used) if (!defined.has(n)) add('ERR', '引用', `${f.full} 正文引用 [${n}] 无对应来源条目`);
   for (const n of defined) if (!used.has(n)) add('WARN', '引用', `${f.full} 来源 [${n}] 定义了但正文未引用`);
