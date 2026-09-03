@@ -97,7 +97,8 @@ nav_title: 前期准备
 ## 四、门票
 
 - [ ] **迪士尼 09.28**：4 成人 + 2 小童，**第 2 级** HK$759 / HK$569，官网原价 **HK$4,174** [10]
-- [ ] **09.24 前必办**：官网买「二人同游」旅客专享套票（组合A×2 + 组合B×1，第 2 级约 HK$3,956，另得 6 张 HK$80 餐饮券），**此优惠只限抵港前购买**，不可退款改期，预订截止 2026-10-07 [26]
+- [ ] **迪士尼门票走 Trip.com「2 大 1 小同行票」买 2 组**：第 2 级每组 HK$1,819，合计 HK$3,638，比官网原价省 HK$536，优惠至 2026-10-19 [26]
+- [ ] 备选官方「二人同游」（约 HK$3,956，送 6 张 HK$80 餐饮券）：**只限抵港前购买，最晚 09.24**，不可退款改期 [26]
       → [官网购票](https://www.hongkongdisneyland.com/zh-hk/)
 - [ ] **先在[门票级别日历](https://www.hongkongdisneyland.com/zh-hk/new-day-calendar/)确认 09.28 的级别再下单** [10]
 - [ ] **买票后必须单独完成入园预约，光有票进不去** [10]
@@ -224,6 +225,6 @@ nav_title: 前期准备
 23. [深圳市人民政府口岸办公室](https://ka.sz.gov.cn/bmfw/katgfw/)
 24. [香港保安局 · 口岸实时人流](https://www.sb.gov.hk/chi/bwt/status.html)
 25. [小红书 · 不建议带小朋友去迪士尼](https://www.xiaohongshu.com/explore/696ecee2000000000a029e07)
-26. [香港迪士尼 ·「二人同游」1 日门票连餐饮折扣券（旅客专享）](https://www.hongkongdisneyland.com/zh-hk/offers-discounts/1-day-ticket-deal-with-meal-discount-voucher/)
+26. [Trip.com · 香港迪士尼门票分级价目表](https://hk.trip.com/blog/hkdisney-summer)｜[官方「二人同游」旅客专享](https://www.hongkongdisneyland.com/zh-hk/offers-discounts/1-day-ticket-deal-with-meal-discount-voucher/)
 
 核验日期：2026-09-03。

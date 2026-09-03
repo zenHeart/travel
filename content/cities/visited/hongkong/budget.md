@@ -25,12 +25,12 @@ chinese_name: 预算
 
 | 项目 | 金额 |
 | --- | --- |
-| 迪士尼 · 走「二人同游」（见性价比 #1） | **约 HK$3,956** [8] |
+| 迪士尼 · 走 Trip.com 2 大 1 小同行票 ×2（见性价比 #1） | **HK$3,638** [8] |
 | 提早入园证（见性价比 #2） | HK$1,194 [1] |
 | 昂坪360 · 走 Klook 买 1 送 1（见性价比 #4） | **约 HK$850** [9] |
 | 开平联票（赤坎门票住店已含） | ¥750 [3] |
 
-门票合计约 **HK$4,806 + ¥750 ≈ ¥5,170**（不含提早入园证）。两项都按官网原价买则约 ¥5,950，**差价约 ¥780 全在下单渠道上**。
+门票合计约 **HK$4,488 + ¥750 ≈ ¥4,880**（不含提早入园证）。两项都按官网原价买则约 ¥5,950，**差价约 ¥1,070 全在下单渠道上**。
 
 ## 三、住宿与餐饮（预估区间）
 
@@ -50,13 +50,13 @@ chinese_name: 预算
 
 香港假期溢价按 **7-11%** 估，不是翻倍 [10][11]。
 
-下单顺序影响现金流：酒店与迪士尼门票是两笔大头，先订这两笔，其余随买随付。**迪士尼「二人同游」必须抵港前买，最晚 09.24。**
+下单顺序影响现金流：酒店与迪士尼门票是两笔大头，先订这两笔，其余随买随付。两个门票优惠都有窗口：**Trip.com 同行票至 10.19，昂坪 Klook 买 1 送 1 至 09.30**；若改走官方「二人同游」则**必须抵港前买，最晚 09.24**。
 
 ## 五、性价比决策（12 条）
 
 | # | 决策 | 理由 |
 | --- | --- | --- |
-| 1 | ✅ **买**迪士尼「二人同游」旅客专享套票 | 非港人可用。6 人拆成组合A×2（各 1 成人+1 小童）+ 组合B×1（2 成人），第 2 级约 **HK$3,956**，省约 HK$218，另得 6 张 HK$80 园内餐饮折扣券。⚠️ **必须抵港前购买**（最晚 09.24），不可退款改期，预订截止 2026-10-07。官网标价 HK$1,129／HK$1,274 为第 1 级起价，**下单选 09.28 以页面实价为准** [8] |
+| 1 | ✅ **买** Trip.com「2 大 1 小同行票」×2 组 | 官方分级表明码标价：第 2 级每组 **HK$1,819**，6 人两组 = **HK$3,638**，比官网原价省 **HK$536**，另送 6 顶 20 周年派对帽。优惠至 2026-10-19，第 1-4 级日期均适用 [8]。<br>备选官方「二人同游」约 HK$3,956（第 2 级为推算），送 6 张 HK$80 餐饮券，但须**抵港前购买**且不可退改。<br>⚠️ 官方「三人同游」（第 2 级 HK$1,773）**入园须在 09.24 或之前，你们用不了** |
 | 2 | ✅ **买**迪士尼提早入园证（6 人 HK$1,194） | 实测没买的人在小飞象排 2 次、每次 1.5 小时没坐上，最后花 HK$99 买单项插队；6 人一天就回本 [4] |
 | 3 | ❌ **不买**尊享卡 DPA | HK$229/人 ×6 = HK$1,374；09.28 是香港上班日，园区全程最空 [4] |
 | 4 | ✅ **买**昂坪缆车 Klook「买 1 送 1」**来回票** | 标准车厢来回成人 ¥126（原价 ¥253），**有效期至 2026-09-30**。4 成人约 HK$548，省 HK$632。不支持退改；要弹性改买 ¥195 可退改档。**不要买单程**，买 1 送 1 的来回价低于官方单程价。**只走官方授权平台** [2][9] |
@@ -106,7 +106,7 @@ chinese_name: 预算
 5. [港铁 · 车票及车费](https://www.mtr.com.hk/ch/customer/tickets/index.php)
 6. [汇丰 One · 官方页](https://www.hsbc.com.hk/zh-hk/accounts/products/one/)
 7. [香港迪士尼 · 门票级别日历](https://www.hongkongdisneyland.com/zh-hk/new-day-calendar/)｜[港铁 e-Store 第2级成人票 HK$759](https://estore.mtr.com.hk/en/products/disneyland-1-day-ticket-general-admission-tier-2)｜[第2级小童票 HK$569](https://estore.mtr.com.hk/products/disneyland-1-day-ticket-child-tier-2)
-8. [香港迪士尼 ·「二人同游」1日门票连餐饮折扣券（旅客专享）](https://www.hongkongdisneyland.com/zh-hk/offers-discounts/1-day-ticket-deal-with-meal-discount-voucher/)
+8. [Trip.com · 香港迪士尼门票优惠分级价目表](https://hk.trip.com/blog/hkdisney-summer)｜[官方「二人同游」旅客专享](https://www.hongkongdisneyland.com/zh-hk/offers-discounts/1-day-ticket-deal-with-meal-discount-voucher/)｜[官方「三人同游」内地旅客专享（入园须 09.24 前）](https://www.hongkongdisneyland.com/zh-cn/offers-discounts/party-of-3-1-day-ticket-deal/)
 9. [Klook · 昂坪360 缆车门票](https://www.klook.com/zh-HK/activity/45-ngong-ping-360-hong-kong/)
 10. [香港特区政府新闻公报 · 2026 五一黄金周酒店入住与房价](https://www.info.gov.hk/gia/general/202605/06/P2026050600707.htm)
 11. [China Daily HK · 2025 国庆中秋酒店入住率与房价](https://www.chinadailyhk.com/hk/article/621303)

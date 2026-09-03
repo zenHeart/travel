@@ -136,7 +136,7 @@ layout: blog
 | 18:30 | **A 组离园**（次日 07:20 的车，必须早起） |
 | 20:30 | 烟花场**且娃状态好**，B 组才看；21:30 场直接放弃 |
 
-**票价**：09.28 为**第 2 级**，成人 HK$759 / 小童（3-11 岁）HK$569，4 大 2 小官网原价 **HK$4,174** [2]。走官方「二人同游」旅客专享套票（A×2 + B×1）约 **HK$3,956**，省约 HK$218 并另得 6 张 HK$80 餐饮券，**须抵港前购买** [19]。加**提早入园证 HK$199/人** [11]。
+**票价**：09.28 为**第 2 级**，成人 HK$759 / 小童（3-11 岁）HK$569，4 大 2 小官网原价 **HK$4,174** [2]。走 [Trip.com「2 大 1 小同行票」](https://hk.trip.com/blog/hkdisney-summer)×2 组为 **HK$3,638**，省 HK$536 [19]。加**提早入园证 HK$199/人** [11]。
 
 ⚠️ **买票后必须在官网单独完成入园预约**，光有票进不去 [2]。**09.28 的具体级别下单前在[门票级别日历](https://www.hongkongdisneyland.com/zh-hk/new-day-calendar/)核对** [2]。
 
@@ -216,6 +216,6 @@ layout: blog
 16. [小红书 · 赤坎交通住宿选择攻略](https://www.xiaohongshu.com/explore/69869f92000000001a02d6b3)
 17. [江门本地宝 · 开平碉楼门票](https://m.jm.bendibao.com/tour/5692.shtm)
 18. [携程 · 开平南→武汉时刻表](https://trains.ctrip.com/TrainBooking/kaipingnan-wuhan/gaotie)
-19. [香港迪士尼 ·「二人同游」1 日门票连餐饮折扣券（旅客专享）](https://www.hongkongdisneyland.com/zh-hk/offers-discounts/1-day-ticket-deal-with-meal-discount-voucher/)
+19. [Trip.com · 香港迪士尼门票分级价目表](https://hk.trip.com/blog/hkdisney-summer)｜[官方「二人同游」旅客专享](https://www.hongkongdisneyland.com/zh-hk/offers-discounts/1-day-ticket-deal-with-meal-discount-voucher/)
 
 车次、票价、开放时间**下单前均需在官方渠道复核**。核验日期：2026-09-03。
