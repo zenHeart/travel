@@ -12,6 +12,10 @@ nav_title: 09.27 大屿山
 
 东涌线与次日的迪士尼同一方向。
 
+## 地图与导航
+
+昂坪360 东涌缆车站定位用 [Google Maps](https://www.google.com/maps/search/?api=1&query=Ngong+Ping+360+Tung+Chung)；电子排队在[官网](https://www.np360.com.hk/)登记。
+
 ## 出发前必看
 
 昂坪360 官网[重要通知](https://www.np360.com.hk/)（核验于 2026-09-03）：
