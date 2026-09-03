@@ -3,7 +3,8 @@ import { TenglvCardData } from "../types/tenglvCard";
 
 const cardModules = import.meta.glob("/content/cards/*/items.yaml", {
   eager: true,
-  as: "raw",
+  query: "?raw",
+            import: "default",
 });
 
 export function loadTenglvCardData(): TenglvCardData {

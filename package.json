@@ -15,7 +15,8 @@
     "deploy": "./scripts/deploy.sh",
     "deploy:check": "./scripts/deploy.sh --check",
     "deploy:preview": "./scripts/deploy.sh --preview",
-    "deploy:all": "./scripts/deploy.sh --all"
+    "deploy:all": "./scripts/deploy.sh --all",
+    "audit-content": "node scripts/audit-content.js"
   },
   "dependencies": {
     "@amap/amap-jsapi-loader": "^1.0.1",

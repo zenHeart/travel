@@ -47,7 +47,8 @@ export class ContentScanner {
       // 使用更精确的glob模式来匹配index.md文件
       const contentModules = import.meta.glob("/content/cities/*/*/index.md", {
         eager: true,
-        as: "raw",
+        query: "?raw",
+            import: "default",
       });
 
       console.log(
@@ -133,7 +134,8 @@ export class ContentScanner {
           "/content/cities/*/*/*.md", // Changed to .md to scan all markdown files
           {
             eager: true,
-            as: "raw",
+            query: "?raw",
+            import: "default",
           }
         );
 
@@ -194,7 +196,8 @@ export class ContentScanner {
           "/content/cities/*/*/*.{jpg,jpeg,png,gif,webp}",
           {
             eager: true,
-            as: "url",
+            query: "?url",
+            import: "default",
           }
         );
 
