@@ -78,6 +78,12 @@ importers:
       globals:
         specifier: ^16.3.0
         version: 16.3.0
+      micromark:
+        specifier: ^4.0.2
+        version: 4.0.2
+      micromark-extension-gfm:
+        specifier: ^3.0.0
+        version: 3.0.0
       typescript:
         specifier: ~5.8.3
         version: 5.8.3
