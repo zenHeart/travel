@@ -96,7 +96,8 @@ nav_title: 前期准备
 
 ## 四、门票
 
-- [ ] **迪士尼 09.28**：4 成人 + 2 小童，第 1 级 HK$669 / HK$499，合计约 **HK$3,674** [10]
+- [ ] **迪士尼 09.28**：4 成人 + 2 小童，**第 2 级** HK$759 / HK$569，官网原价 **HK$4,174** [10]
+- [ ] **09.24 前必办**：官网买「二人同游」旅客专享套票（组合A×2 + 组合B×1，第 2 级约 HK$3,956，另得 6 张 HK$80 餐饮券），**此优惠只限抵港前购买**，不可退款改期，预订截止 2026-10-07 [26]
       → [官网购票](https://www.hongkongdisneyland.com/zh-hk/)
 - [ ] **先在[门票级别日历](https://www.hongkongdisneyland.com/zh-hk/new-day-calendar/)确认 09.28 的级别再下单** [10]
 - [ ] **买票后必须单独完成入园预约，光有票进不去** [10]
@@ -114,7 +115,7 @@ nav_title: 前期准备
 三段共 8 晚，具体选房见 [住宿](./hotels.md)。
 
 - [ ] **深圳 1 晚（09.25）**：福田口岸**步行 5 分钟内**
-- [ ] **香港 4 晚（09.26-09.30）**：尖沙咀**，订套房不订标准房**（大人能有独立空间）
+- [ ] **香港 4 晚（09.26-09.30）**：尖沙咀，**订套房不订标准房**（大人能有独立空间）
       首选[港青 YMCA](https://www.ymcahk.org.hk/thesalisbury/tc/home/index.html)，有室内泳池 [15]
 - [ ] **开平 3 晚（09.30-10.03）**：**住[赤坎古镇](https://www.chikantown.com/)景区内**，含两日门票、可无限次进出、有接驳车接送行李 [13]
       金墟酒店选 A 区；性价比选荣安旅店 [13][16]
@@ -223,5 +224,6 @@ nav_title: 前期准备
 23. [深圳市人民政府口岸办公室](https://ka.sz.gov.cn/bmfw/katgfw/)
 24. [香港保安局 · 口岸实时人流](https://www.sb.gov.hk/chi/bwt/status.html)
 25. [小红书 · 不建议带小朋友去迪士尼](https://www.xiaohongshu.com/explore/696ecee2000000000a029e07)
+26. [香港迪士尼 ·「二人同游」1 日门票连餐饮折扣券（旅客专享）](https://www.hongkongdisneyland.com/zh-hk/offers-discounts/1-day-ticket-deal-with-meal-discount-voucher/)
 
 核验日期：2026-09-03。

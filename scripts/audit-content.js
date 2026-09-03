@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
+import { micromark } from 'micromark';
+import { gfm, gfmHtml } from 'micromark-extension-gfm';
 
 const fm = s => { const m = s.match(/^---\r?\n([\s\S]*?)\r?\n---/); return m ? (yaml.load(m[1]) || {}) : null; };
 const issues = [];
@@ -102,6 +104,26 @@ for (const f of files) {
   }
   for (const n of used) if (!defined.has(n)) add('ERR', '引用', `${f.full} 正文引用 [${n}] 无对应来源条目`);
   for (const n of defined) if (!used.has(n)) add('WARN', '引用', `${f.full} 来源 [${n}] 定义了但正文未引用`);
+}
+
+// ---- 8. 加粗标记位移：中文标点被写进 ** 之内，导致渲染出字面 ** ----
+// CommonMark 的左右侧翼规则里中文标点算 punctuation，`改期**，不保证**` 这种写法
+// 起始 ** 不构成合法开标记，会原样输出。正确写法是 `改期，**不保证**`。
+const strongLead = /^[，。、；：！？）」』】》,.;:!?]/;
+const strongTail = /[（「『【《(]$/;
+for (const f of files) {
+  fs.readFileSync(f.full, 'utf8').split('\n').forEach((line, i) => {
+    if (!line.includes('**')) return;
+    const html = micromark(line.replace(/\|/g, ' '), { extensions: [gfm()], htmlExtensions: [gfmHtml()] });
+    const at = `${f.full}:${i + 1}`;
+    if (html.includes('**'))
+      add('ERR', '加粗', `${at} ** 未成对解析，会渲染出字面星号：${line.trim().slice(0, 60)}`);
+    for (const m of html.matchAll(/<strong>([\s\S]*?)<\/strong>/g)) {
+      const t = m[1].replace(/<[^>]+>/g, '');
+      if (strongLead.test(t)) add('WARN', '加粗', `${at} 加粗以标点开头「${t.slice(0, 12)}…」，** 应移到标点之后`);
+      if (strongTail.test(t)) add('WARN', '加粗', `${at} 加粗以开括号结尾「…${t.slice(-12)}」，** 应移到括号之前`);
+    }
+  });
 }
 
 console.log(`扫描 ${files.length} 个 Markdown 文件\n`);
