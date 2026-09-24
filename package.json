@@ -12,6 +12,7 @@
     "check-env": "node scripts/check-security.js",
     "validate-card-data": "node scripts/validate-card-data.js",
     "test-build": "node scripts/test-build.js",
+    "test:map": "node --test scripts/test-map.mjs",
     "deploy": "./scripts/deploy.sh",
     "deploy:check": "./scripts/deploy.sh --check",
     "deploy:preview": "./scripts/deploy.sh --preview",

@@ -39,9 +39,17 @@ export function SecureMap() {
         const loader = await import('@amap/amap-jsapi-loader');
         const AMap = await loader.default.load({ key: MAP_CONFIG.apiKey, version: MAP_CONFIG.version });
         if (cancelled || !container.current) return;
-        window.clearTimeout(timeout);
-        const map = new AMap.Map(container.current, { center: MAP_CONFIG.center, zoom: MAP_CONFIG.zoom });
+        const map = new AMap.Map(container.current, {
+          center: MAP_CONFIG.center,
+          zoom: MAP_CONFIG.zoom,
+          layers: [new AMap.TileLayer.Satellite()],
+        });
         mapRef.current = map;
+        map.on('complete', () => {
+          if (cancelled) return;
+          window.clearTimeout(timeout);
+          setLoading(false);
+        });
         points.forEach(point => {
           const icon = MARKER_ICONS[point.status === 'visited' ? 'visited' : 'wishlist'];
           const marker = new AMap.Marker({
@@ -53,7 +61,6 @@ export function SecureMap() {
           marker.on('click', () => navigate(point.path));
           map.add(marker);
         });
-        setLoading(false);
       } catch (cause) {
         if (!cancelled) {
           window.clearTimeout(timeout);

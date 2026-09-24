@@ -56,6 +56,9 @@ jobs:
       - name: Run linting
         run: pnpm lint
 
+      - name: Run map regression tests
+        run: pnpm test:map
+
   # 构建项目
   build:
     runs-on: ubuntu-latest
