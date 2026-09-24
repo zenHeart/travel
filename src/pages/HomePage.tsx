@@ -1,163 +1,52 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useCities } from "../hooks/useCities";
-import { SecureMap } from "../components/Map/SecureMap";
-import { LoadingSpinner } from "../components/Common/LoadingSpinner";
-import { EmptyState } from "../components/Common/EmptyState";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useTrips } from '../hooks/useTrips';
+import { SecureMap } from '../components/Map/SecureMap';
 
-export const HomePage: React.FC = () => {
-  const { cities, loading, error, getCitiesByStatus } = useCities();
+export function HomePage() {
+  const { trips } = useTrips();
+  const wished = trips.filter(trip => trip.status === 'wishlist');
+  const timeline = trips.filter(trip => trip.status !== 'wishlist');
+  const years = [...new Set(timeline.map(trip => trip.startDate?.slice(0, 4) || trip.startYear || '日期未定'))];
   const navigate = useNavigate();
-  const [showCityList, setShowCityList] = useState(false);
-
-  if (loading) {
-    return <LoadingSpinner message="正在加载城市数据..." />;
-  }
-
-  if (error) {
-    return (
-      <div className="p-8 text-center">
-        <div className="text-red-500 mb-4">❌</div>
-        <h3 className="text-lg font-medium text-gray-900 mb-2">加载失败</h3>
-        <p className="text-gray-500">{error}</p>
-      </div>
-    );
-  }
-
-  const visitedCities = getCitiesByStatus("visited");
-  const plannedCities = getCitiesByStatus("planned");
-  const wishlistCities = getCitiesByStatus("wishlist");
-
-  const handleCityClick = (cityId: string) => {
-    navigate(`/city/${cityId}`);
-  };
-
-  return (
-    <div className="h-screen w-full flex flex-col overflow-hidden">
-      {/* 顶部工具栏 - 包含城市列表按钮 */}
-      <div className="bg-white shadow-sm p-2 z-30 relative">
-        <div className="flex justify-between items-center">
-          <h1 className="text-xl md:text-2xl font-bold text-gray-900">
-            我的旅行地图
-          </h1>
-          <div className="flex items-center space-x-2">
-            {/* 城市列表按钮 - 作为自定义工具 */}
-            <button
-              onClick={() => setShowCityList(!showCityList)}
-              className="btn-secondary btn-mobile text-sm"
-              title="城市列表"
-            >
-              📍 城市列表 ({cities.length})
-            </button>
-            <button
-              onClick={() => navigate("/cards/wuhan-tenglv")}
-              className="btn-secondary btn-mobile text-sm"
-              title="腾旅卡"
-            >
-              腾旅卡
-            </button>
-          </div>
+  const [showTrips, setShowTrips] = useState(false);
+  const [showWishes, setShowWishes] = useState(false);
+  return <div className="flex h-screen w-full flex-col overflow-hidden">
+    <div className="relative z-30 bg-white p-2 shadow-sm">
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl font-bold text-gray-900 md:text-2xl">我的旅行地图</h1>
+        <div className="flex items-center space-x-2">
+          <button className="btn-secondary btn-mobile text-sm" onClick={() => setShowTrips(!showTrips)}>📍 游记列表 ({trips.length})</button>
+          <button className="btn-secondary btn-mobile text-sm" onClick={() => navigate('/place/wuhan/index')}>武汉 · 常驻地</button>
         </div>
       </div>
-
-      {/* 主要内容区域 - 地图占满剩余空间 */}
-      <div className="flex-1 relative w-full">
-        <SecureMap
-          onMapError={(error) => {
-            console.error("地图加载错误:", error);
-          }}
-        />
-
-        {/* 城市列表面板 - 悬浮在顶部 */}
-        {showCityList && (
-          <div className="absolute top-2 left-2 right-2 md:left-auto md:right-2 md:w-80 z-20">
-            <div className="floating-panel max-h-[calc(100vh-120px)] overflow-hidden">
-              <div className="p-4 overflow-y-auto max-h-[calc(100vh-140px)]">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-lg font-semibold">城市列表</h2>
-                  <button
-                    onClick={() => setShowCityList(false)}
-                    className="text-gray-500 hover:text-gray-700"
-                  >
-                    ✕
-                  </button>
-                </div>
-
-                {/* 计划中城市 */}
-                <div className="mb-6">
-                  <h3 className="text-md font-medium text-warning mb-3">
-                    计划中城市 ({plannedCities.length})
-                  </h3>
-                  {plannedCities.length > 0 ? (
-                    <div className="space-y-2">
-                      {plannedCities.map((city) => (
-                        <div
-                          key={city.id}
-                          className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
-                          onClick={() => handleCityClick(city.id)}
-                        >
-                          <h4 className="font-medium">{city.name}</h4>
-                          <p className="text-sm text-gray-600">计划中</p>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <EmptyState type="planned" />
-                  )}
-                </div>
-
-                {/* 愿望清单城市 */}
-                <div className="mb-6">
-                  <h3 className="text-md font-medium text-primary mb-3">
-                    愿望清单城市 ({wishlistCities.length})
-                  </h3>
-                  {wishlistCities.length > 0 ? (
-                    <div className="space-y-2">
-                      {wishlistCities.map((city) => (
-                        <div
-                          key={city.id}
-                          className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
-                          onClick={() => handleCityClick(city.id)}
-                        >
-                          <h4 className="font-medium">{city.name}</h4>
-                          <p className="text-sm text-gray-600">愿望清单</p>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <EmptyState type="wishlist" />
-                  )}
-                </div>
-
-                {/* 已访问城市 */}
-                <div className="mb-6">
-                  <h3 className="text-md font-medium text-success mb-3">
-                    已访问城市 ({visitedCities.length})
-                  </h3>
-                  {visitedCities.length > 0 ? (
-                    <div className="space-y-2">
-                      {visitedCities.map((city) => (
-                        <div
-                          key={city.id}
-                          className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
-                          onClick={() => handleCityClick(city.id)}
-                        >
-                          <h4 className="font-medium">{city.name}</h4>
-                          <p className="text-sm text-gray-600">
-                            {city.visitDate}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <EmptyState type="visited" />
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
     </div>
-  );
-};
+    <div className="relative w-full flex-1">
+      <SecureMap />
+      {showTrips && <div className="absolute left-2 right-2 top-2 z-20 md:left-auto md:w-80">
+        <div className="floating-panel max-h-[calc(100vh-120px)] overflow-y-auto p-4">
+          <div className="mb-4 flex items-center justify-between"><h2 className="text-lg font-semibold">游记列表</h2><button onClick={() => setShowTrips(false)}>✕</button></div>
+          <section className="mb-6">
+            <button className="mb-2 flex w-full items-center justify-between text-left font-medium text-blue-700" aria-expanded={showWishes} onClick={() => setShowWishes(!showWishes)}>
+              <span>♡ 心愿 ({wished.length})</span><span aria-hidden="true">{showWishes ? '▾' : '▸'}</span>
+            </button>
+            {showWishes && <div className="space-y-2 border-l-2 border-blue-200 pl-3">{wished.map(trip => <button key={trip.id} className="w-full rounded-lg bg-blue-50 p-3 text-left hover:bg-blue-100" onClick={() => navigate(`/${trip.id}/index`)}>
+              <span className="block font-medium">{trip.title}</span>
+              <span className="text-sm text-gray-500">{trip.dateHint || trip.startDate || trip.startYear || '日期未定'} · {trip.points.map(point => point.label).join('、')}</span>
+            </button>)}</div>}
+          </section>
+          <section>
+            <h3 className="mb-2 font-medium">行程时间轴 ({timeline.length})</h3>
+            {years.map(year => <div key={year} className="mb-4 border-l-2 border-slate-200 pl-3">
+              <div className="mb-2 text-sm font-semibold text-slate-700">{year}</div>
+              <div className="space-y-2">{timeline.filter(trip => (trip.startDate?.slice(0, 4) || trip.startYear || '日期未定') === year).map(trip => <button key={trip.id} className={`w-full rounded-lg p-3 text-left ${trip.status === 'planned' ? 'bg-blue-50 hover:bg-blue-100' : 'bg-gray-50 hover:bg-gray-100'}`} onClick={() => navigate(`/${trip.id}/index`)}>
+                <span className="block font-medium">{trip.status === 'planned' && <span className="mr-2 text-xs text-blue-700">计划</span>}{trip.title}</span>
+                <span className="text-sm text-gray-500">{trip.dateHint || trip.startDate || trip.startYear || '日期未定'} · {trip.points.map(point => point.label).join('、')}</span>
+              </button>)}</div>
+            </div>)}
+          </section>
+        </div>
+      </div>}
+    </div>
+  </div>;
+}

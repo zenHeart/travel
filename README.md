@@ -83,114 +83,58 @@ pnpm deploy:preview  # 构建并预览
 pnpm deploy:all      # 完整部署流程
 ```
 
-## 项目结构
+## 游记与城市
 
-```
-travel/
-├── content/          # 旅行内容
-│   └── cities/      # 城市数据
-│       ├── visited/     # 已访问城市
-│       ├── planned/     # 计划中城市（可选）
-│       └── wishlist/    # 愿望清单城市
-├── src/             # 源代码
-│   ├── components/  # React 组件
-│   ├── pages/       # 页面组件
-│   └── utils/       # 工具函数
-├── public/          # 静态资源
-└── dist/            # 构建输出
-```
+`content/trip/<行程 ID>/README.md` 是一篇游记的入口。一个行程可以覆盖多个城市；每个城市用同目录的 `<city>.md` 表示。单城市游记直接在 `README.md` 写全文。日期确切时，目录以 `YYYY-MM-DD-` 开头；只知道年份时用 `YYYY-`，只知道月日或日期未定时用 `undated-`。愿望清单也作为 `status: wishlist` 的未定日期行程。
 
-## 如何添加新城市
+```text
+content/trip/
+├── 2026-09-25-zhuhai-shenzhen-hongkong/
+│   ├── README.md       # 行程总览、准备事项
+│   ├── zhuhai.md       # 城市行程与地图点位
+│   ├── shenzhen.md
+│   └── hongkong.md
+└── undated-aershan/
+    └── README.md       # 单城市、未定日期行程
 
-### 1. 创建城市目录
-
-根据城市状态在对应目录下创建新文件夹：
-
-```bash
-# 已访问城市
-mkdir -p content/cities/visited/cityname
-
-# 计划中城市
-mkdir -p content/cities/planned/cityname
-
-# 愿望清单城市
-mkdir -p content/cities/wishlist/cityname
+content/place/wuhan/
+├── README.md           # 常驻地生活清单
+└── tenglv-card/items.yaml
 ```
 
-### 2. 创建 index.md 文件
-
-在城市目录下创建 `index.md` 文件，必须包含 YAML frontmatter：
+游记入口示例：
 
 ```markdown
 ---
-chinese_name: 北京 # 必需：中文名称
-english_name: Beijing # 必需：英文名称
-coordinates: [116.4074, 39.9042] # 必需：经纬度坐标 [经度, 纬度]
-status: visited # 必需：城市状态 visited/planned/wishlist
-visit_date: 2024-01-15 # 可选：访问日期
-duration: 5天4夜 # 可选：行程时长
-tags: [首都, 历史, 文化] # 可选：标签数组
-title: 北京之旅 # 可选：页面标题
-date: 2025-07-28 # 可选：创建日期
-layout: blog # 可选：布局类型
+type: trip
+title: 珠海 → 深圳 → 香港
+status: planned
+start_date: "2026-09-25"
 ---
 
-# 北京
+# 行程总览
 
-## 行程安排
-
-### 第一天
-
-- 天安门广场
-- 故宫博物院
-
-### 第二天
-
-- 长城一日游
-
-## 美食推荐
-
-- 北京烤鸭
-- 炸酱面
-
-## 交通
-
-- 地铁：方便快捷
-- 出租车：较贵但舒适
+- [珠海](./zhuhai.md)
 ```
 
-### 3. 添加相关文件（可选）
+城市分页示例：
 
-可以在城市目录下添加更多文件：
+```markdown
+---
+type: city
+chinese_name: 珠海
+coordinates: [113.5767, 22.2707]
+order: 1
+---
 
-```bash
-# 详细攻略
-touch content/cities/visited/cityname/detail.md
-
-# 美食攻略
-touch content/cities/visited/cityname/food.md
-
-# 添加图片
-cp photo.jpg content/cities/visited/cityname/
+# 珠海
 ```
 
-### 4. 预览效果
+单城市游记把 `chinese_name` 和 `coordinates` 加在 `README.md` 的 frontmatter 中，即可生成地图点位。其他附录页使用 `type: note`，不生成点位。页面路径为 `#/<行程 ID>/index` 和 `#/<行程 ID>/<城市文件名>`；地图点位直达相应城市页。图片放在游记目录并用 `./图片名` 引用。提交前执行 `pnpm audit-content` 与 `pnpm build`。
 
-启动开发服务器查看效果：
+`start_date` 只记录能确认的完整出发日期；仅知道出行年份时用 `start_year`。旧笔记只有月日或只有首次提交时间时，用 `date_hint` 展示线索、`first_committed_on` 记录 Git 首次入库时间；它们不等同于旅行日期，也不会被当作已确认年份排序。经用户确认的年份和日期用 `date_source: user-confirmed` 标明来源。
 
-```bash
-pnpm dev
-```
-
-访问 `http://localhost:5173` 查看新添加的城市是否正确显示在地图上。
-
-### 注意事项
-
-1. **必需字段**: `chinese_name`、`english_name`、`coordinates` 和 `status` 是必需的
-2. **坐标格式**: 坐标必须是数组格式 `[经度, 纬度]`，可以通过高德地图等工具获取
-3. **目录名**: 目录名应使用英文小写，建议与 `english_name` 对应但简化
-4. **状态一致性**: frontmatter 中的 `status` 应与目录位置一致
-5. **图片路径**: 在 markdown 中使用相对路径引用图片，如 `![描述](./photo.jpg)`
+武汉属于常驻地，使用 `type: place` 放在 `content/place/wuhan/`，不计入游记时间轴或心愿。首页和地图进入 `#/place/wuhan/index`；腾旅卡数据与页面属于武汉，路径为 `#/place/wuhan/tenglv`。
 
 ## 技术栈
 

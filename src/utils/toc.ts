@@ -2,6 +2,7 @@ export interface TocItem {
   id: string;
   text: string;
   level: 2 | 3;
+  line: number;
 }
 
 /** 标题文字 → 锚点 id。TOC 与正文标题必须用同一份实现，否则跳转失效。 */
@@ -19,12 +20,12 @@ export function slugifyHeading(text: string): string {
 
 /** 从 Markdown 源码提取 h2/h3，跳过 frontmatter 与代码块 */
 export function extractToc(markdown: string): TocItem[] {
-  const body = markdown.replace(/^---\r?\n[\s\S]*?\r?\n---/, "");
+  const body = markdown.replace(/^---\r?\n[\s\S]*?\r?\n---/, match => "\n".repeat(match.split("\n").length - 1));
   const items: TocItem[] = [];
   const seen = new Map<string, number>();
   let inFence = false;
 
-  for (const line of body.split("\n")) {
+  for (const [index, line] of body.split("\n").entries()) {
     if (/^\s*```/.test(line)) {
       inFence = !inFence;
       continue;
@@ -41,7 +42,7 @@ export function extractToc(markdown: string): TocItem[] {
     seen.set(id, n + 1);
     if (n > 0) id = `${id}-${n}`;
 
-    items.push({ id, text, level: m[1].length === 2 ? 2 : 3 });
+    items.push({ id, text, level: m[1].length === 2 ? 2 : 3, line: index + 1 });
   }
   return items;
 }

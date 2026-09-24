@@ -189,3 +189,8 @@
     @apply border border-gray-300 px-4 py-2 text-left;
   }
 }
+/* GFM 在松散列表项里包一层段落；待办项的文字需与复选框同行。 */
+.markdown-content .task-item > p {
+  display: inline;
+  margin: 0;
+}

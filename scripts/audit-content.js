@@ -8,52 +8,40 @@ const fm = s => { const m = s.match(/^---\r?\n([\s\S]*?)\r?\n---/); return m ? (
 const issues = [];
 const add = (sev, cat, msg) => issues.push({ sev, cat, msg });
 
-// ---- 1. 收集所有内容文件 ----
+// ---- 1. 所有游记文档与 frontmatter 契约 ----
 const files = [];
-for (const st of ['visited', 'planned', 'wishlist']) {
-  const d = `content/cities/${st}`;
-  if (!fs.existsSync(d)) continue;
-  for (const city of fs.readdirSync(d)) {
-    const dir = `${d}/${city}`;
-    if (!fs.statSync(dir).isDirectory()) continue;
-    for (const f of fs.readdirSync(dir).filter(x => x.endsWith('.md'))) {
-      files.push({ status: st, city, name: f, full: `${dir}/${f}`, isIndex: f === 'index.md' });
+const root = 'content/trip';
+for (const trip of fs.readdirSync(root)) {
+  const dir = `${root}/${trip}`;
+  if (!fs.statSync(dir).isDirectory()) continue;
+  const index = `${dir}/README.md`;
+  if (!fs.existsSync(index)) { add('ERR', '目录', `${dir} 缺 README.md`); continue; }
+  for (const name of fs.readdirSync(dir).filter(name => name.endsWith('.md'))) {
+    const full = `${dir}/${name}`;
+    files.push({ trip, name, full, isIndex: name === 'README.md' });
+    const meta = fm(fs.readFileSync(full, 'utf8'));
+    if (!meta) { add('ERR', 'frontmatter', `${full} 缺 frontmatter`); continue; }
+    if (name === 'README.md' && (meta.type !== 'trip' || !meta.title || !['visited', 'planned', 'wishlist'].includes(meta.status)))
+      add('ERR', 'frontmatter', `${full} 需包含 type: trip、title、有效 status`);
+    if (name !== 'README.md' && !['city', 'note'].includes(meta.type))
+      add('ERR', 'frontmatter', `${full} 需包含 type: city 或 note`);
+    if (meta.type === 'city' && (!meta.chinese_name || !meta.coordinates))
+      add('ERR', 'frontmatter', `${full} 城市页需包含 chinese_name 与 coordinates`);
+    if (meta.coordinates) {
+      const [lng, lat] = meta.coordinates;
+      if (!Array.isArray(meta.coordinates) || meta.coordinates.length !== 2 || !Number.isFinite(lng) || !Number.isFinite(lat) || lng < 73 || lng > 136 || lat < 3 || lat > 54)
+        add('ERR', '坐标', `${full} coordinates 无效`);
     }
   }
 }
-
-// ---- 2. index.md frontmatter 契约 ----
-const ids = {}, coords = {};
-for (const f of files.filter(x => x.isIndex)) {
-  const c = fs.readFileSync(f.full, 'utf8');
-  const o = fm(c);
-  if (!o) { add('ERR', 'frontmatter', `${f.full} 缺 frontmatter`); continue; }
-  for (const k of ['chinese_name', 'english_name']) if (!o[k]) add('ERR', 'frontmatter', `${f.full} 缺 ${k}`);
-  if (!Array.isArray(o.coordinates) || o.coordinates.length !== 2) add('ERR', 'frontmatter', `${f.full} coordinates 非二元组`);
-  else {
-    const [lng, lat] = o.coordinates;
-    if (lng < 73 || lng > 136) add('ERR', 'coords', `${f.full} 经度越界 ${lng}`);
-    if (lat < 3 || lat > 54) add('ERR', 'coords', `${f.full} 纬度越界 ${lat}`);
-    (coords[JSON.stringify(o.coordinates)] ||= []).push(o.chinese_name);
-  }
-  (ids[f.city] ||= []).push(f.status);
+for (const place of fs.readdirSync('content/place')) {
+  const full = `content/place/${place}/README.md`;
+  if (!fs.existsSync(full)) { add('ERR', '目录', `${full} 不存在`); continue; }
+  files.push({ place, name: 'README.md', full, isIndex: true });
+  const meta = fm(fs.readFileSync(full, 'utf8'));
+  if (meta?.type !== 'place' || !meta.chinese_name || !Array.isArray(meta.coordinates) || meta.coordinates.length !== 2)
+    add('ERR', 'frontmatter', `${full} 需包含 type: place、chinese_name、coordinates`);
 }
-for (const [id, sts] of Object.entries(ids)) if (sts.length > 1) add('ERR', 'id冲突', `cityId "${id}" 同时存在于 ${sts.join(', ')}`);
-
-// ---- 3. 子页 frontmatter（可选，但写了就要合契约）----
-for (const f of files.filter(x => !x.isIndex)) {
-  const c = fs.readFileSync(f.full, 'utf8');
-  const o = fm(c);
-  if (!o) continue;
-  if (o.coordinates) {
-    if (!Array.isArray(o.coordinates) || o.coordinates.length !== 2)
-      add('ERR', 'frontmatter', `${f.full} 子页 coordinates 非二元组`);
-    else if (!o.chinese_name)
-      add('ERR', 'frontmatter', `${f.full} 有 coordinates 但缺 chinese_name（不会生成地图点位）`);
-    else (coords[JSON.stringify(o.coordinates)] ||= []).push(o.chinese_name);
-  }
-}
-for (const [c, names] of Object.entries(coords)) if (names.length > 1) add('ERR', 'coords', `坐标重叠 ${c}: ${names.join(' / ')}`);
 
 // ---- 4. 站内 .md 相对链接是否解析 ----
 for (const f of files) {

@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 import yaml from "js-yaml";
 
-const cardPath = path.join("content", "cards", "wuhan-tenglv-card", "items.yaml");
+const cardPath = path.join("content", "place", "wuhan", "tenglv-card", "items.yaml");
 const allowedSections = new Set(["年卡权益", "增值福利"]);
 const allowedEnvironments = new Set(["indoor", "outdoor", "mixed", "unknown"]);
 const allowedClassificationStatuses = new Set([

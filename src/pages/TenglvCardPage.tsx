@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTenglvCard } from "../hooks/useTenglvCard";
+import { PlaceNav } from "../components/Navigation/PlaceNav";
 import {
   TenglvCardEnvironment,
   TenglvCardItem,
@@ -275,15 +276,20 @@ export const TenglvCardPage: React.FC = () => {
   );
 
   return (
-    <div className="h-screen overflow-y-auto bg-slate-50">
+    <div className="flex h-screen bg-slate-50">
+      <aside className="hidden w-48 shrink-0 overflow-y-auto border-r border-slate-200 bg-white px-3 py-6 lg:block xl:w-56 2xl:w-64">
+        <PlaceNav active="tenglv" variant="rail" />
+      </aside>
+      <main className="min-w-0 flex-1 overflow-y-auto">
       <div className="mx-auto flex max-w-7xl flex-col gap-4 px-3 py-4 md:px-6">
+        <div className="lg:hidden"><PlaceNav active="tenglv" variant="collapse" /></div>
         <header className="flex flex-col gap-3 border-b border-gray-200 pb-4 md:flex-row md:items-center md:justify-between">
           <div className="min-w-0">
             <button
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/place/wuhan/index")}
               className="mb-3 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
             >
-              返回首页
+              ← 返回武汉
             </button>
             <h1 className="text-2xl font-bold text-gray-900 md:text-3xl">
               {card.name}
@@ -507,6 +513,7 @@ export const TenglvCardPage: React.FC = () => {
           </div>
         )}
       </div>
+      </main>
     </div>
   );
 };

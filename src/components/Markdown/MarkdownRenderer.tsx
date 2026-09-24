@@ -5,17 +5,55 @@ import remarkFrontmatter from "remark-frontmatter";
 import rehypeRaw from "rehype-raw";
 import { useNavigate } from "react-router-dom";
 import { ImagePreview } from "../Common/ImagePreview";
+import { TocItem } from "../../utils/toc";
 
 interface MarkdownRendererProps {
   content: string;
   className?: string;
   basePath?: string; // 添加基础路径参数
+  documentKey?: string;
+  toc?: TocItem[];
 }
+
+const TaskCheckbox: React.FC<{
+  storageKey: string;
+  initialChecked: boolean;
+  label: string;
+}> = ({ storageKey, initialChecked, label }) => {
+  const [checked, setChecked] = useState(() => {
+    try {
+      const saved = localStorage.getItem(storageKey);
+      return saved === null ? initialChecked : saved === "1";
+    } catch {
+      return initialChecked;
+    }
+  });
+
+  return (
+    <input
+      type="checkbox"
+      checked={checked}
+      aria-label={label}
+      className="mr-2 accent-teal-600"
+      onChange={(event) => {
+        const next = event.target.checked;
+        setChecked(next);
+        try {
+          localStorage.setItem(storageKey, next ? "1" : "0");
+        } catch {
+          // Storage may be unavailable; the checkbox still works until reload.
+        }
+      }}
+    />
+  );
+};
 
 export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   content,
   className = "",
   basePath = "",
+  documentKey = "",
+  toc = [],
 }) => {
   const navigate = useNavigate();
   const [previewImage, setPreviewImage] = useState<{
@@ -23,14 +61,13 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     alt?: string;
   } | null>(null);
 
-  // basePath 形如 "visited/hongkong"，取出城市 id 用于站内跳转
-  const cityId = basePath.split("/")[1] || "";
+  const tripId = basePath.split("/").at(-1) || "";
 
   const handleInternalLink = (href: string) => {
     // [[城市ID]] 或 [[城市ID|显示文本]]
     const wiki = href.match(/^\[\[([^|\]]+)(?:\|([^\]]+))?\]\]$/);
     if (wiki) {
-      navigate(`/city/${wiki[1]}`);
+      navigate(`/${wiki[1]}/index`);
       return;
     }
 
@@ -41,11 +78,11 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       return;
     }
 
-    // 同城市的兄弟文档：./prep.md → /city/hongkong/prep
+    // 同一游记的兄弟文档
     const sibling = href.match(/^\.\/([^/#?]+)\.md(?:#(.*))?$/);
-    if (sibling && cityId) {
+    if (sibling && tripId) {
       const slug = sibling[1];
-      navigate(slug === "index" ? `/city/${cityId}` : `/city/${cityId}/${slug}`);
+      navigate(`/${tripId}/${slug === "README" ? "index" : slug}`);
       return;
     }
 
@@ -70,11 +107,11 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
       if (isDev) {
         // 开发环境：直接访问content目录
-        return `/content/cities/${basePath}/${cleanSrc}`;
+        return `/content/trip/${tripId}/${cleanSrc}`;
       } else {
         // 生产环境：考虑base路径
         const deployBase = import.meta.env.VITE_BASE_URL || "/";
-        return `${deployBase}content/cities/${basePath}/${cleanSrc}`.replace(
+        return `${deployBase}content/trip/${tripId}/${cleanSrc}`.replace(
           /\/+/g,
           "/"
         );
@@ -91,6 +128,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
           remarkPlugins={[remarkGfm, remarkFrontmatter]}
           rehypePlugins={[rehypeRaw]}
           components={{
+            input: ({ type, ...props }) => type === 'checkbox' ? null : <input type={type} {...props} />,
             // 自定义链接处理
             a: ({ href, children, ...props }) => {
               if (href) {
@@ -145,17 +183,19 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
                 {children}
               </h1>
             ),
-            h2: ({ children, ...props }) => (
+            h2: ({ node, children, ...props }) => (
               <h2
                 {...props}
+                id={toc.find(item => item.line === node?.position?.start.line)?.id}
                 className="scroll-mt-4 text-2xl font-bold text-gray-900 mb-4 mt-8 text-left"
               >
                 {children}
               </h2>
             ),
-            h3: ({ children, ...props }) => (
+            h3: ({ node, children, ...props }) => (
               <h3
                 {...props}
+                id={toc.find(item => item.line === node?.position?.start.line)?.id}
                 className="scroll-mt-4 text-xl font-semibold text-gray-900 mb-3 mt-6 text-left"
               >
                 {children}
@@ -226,11 +266,30 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
               </ol>
             ),
             // 自定义列表项样式
-            li: ({ children, ...props }) => (
-              <li {...props} className="text-gray-700 leading-relaxed pl-2">
-                {children}
-              </li>
-            ),
+            li: ({ node, children, className, ...props }) => {
+              const line = node?.position?.start.line ?? 0;
+              const source = content.split("\n")[line - 1] ?? "";
+              const task = source.match(/^\s*(?:[-*+]|\d+[.)]) \[([ xX])\]\s+(.+)$/);
+              if (task) {
+                const storageKey = `travel:checklist:${basePath}:${documentKey}:${line}:${task[2]}`;
+                const taskChildren = React.Children.toArray(children).flatMap((child) =>
+                  React.isValidElement<{ children?: React.ReactNode }>(child) && child.type === 'p'
+                    ? React.Children.toArray(child.props.children)
+                    : child
+                );
+                return (
+                  <li {...props} className="task-item list-none text-gray-700 leading-relaxed">
+                    <TaskCheckbox
+                      storageKey={storageKey}
+                      initialChecked={task[1].toLowerCase() === 'x'}
+                      label={task[2].replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')}
+                    />
+                    {taskChildren}
+                  </li>
+                );
+              }
+              return <li {...props} className={`text-gray-700 leading-relaxed ${className?.includes('task-list-item') ? 'list-none pl-0' : 'pl-2'}`}>{children}</li>;
+            },
             // 自定义表格样式
             table: ({ children, ...props }) => (
               <div className="overflow-x-auto my-4">

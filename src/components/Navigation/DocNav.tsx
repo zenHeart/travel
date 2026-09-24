@@ -1,15 +1,15 @@
 import React from 'react';
-import { MarkdownFile } from '../../types/city';
+import { TripDocument } from '../../types/trip';
 import { NavPanel } from './NavPanel';
 
 interface DocNavProps {
-  files: MarkdownFile[];
+  files: TripDocument[];
   activeFile: string;
   onSelect: (fileName: string) => void;
   variant: 'rail' | 'collapse';
 }
 
-/** 文章导航：在同一城市的多篇文档之间切换。始终纵向。 */
+/** 同一游记的总览、城市和附录分页。 */
 export const DocNav: React.FC<DocNavProps> = ({
   files,
   activeFile,
