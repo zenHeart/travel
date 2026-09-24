@@ -19,7 +19,7 @@ const TenglvCardPage = lazy(() =>
 
 const legacyTrips: Record<string, string> = {
   chongqing: '2022-10-02-chongqing', hangzhou: '2019-xian-nanjing-hangzhou',
-  hongkong: '2026-09-25-zhuhai-shenzhen-hongkong', huangshi: '2025-08-16-huangshi',
+  hongkong: '2026-09-25-zhuhai-hongkong-guangzhou', huangshi: '2025-08-16-huangshi',
   nanjing: '2019-xian-nanjing-hangzhou', qinghai: '2019-05-17-qinghai',
   rizhao: '2025-09-27-rizhao-qingdao', shanghai: '2025-08-01-shanghai',
   shenzhen: '2017-05-28-shenzhen-nanao', xian: '2019-xian-nanjing-hangzhou',
@@ -39,8 +39,10 @@ function LegacyCityRedirect() {
 }
 
 function LegacyZhuhaiTripRedirect() {
-  const { page = 'index' } = useParams();
-  return <Navigate replace to={`/2026-09-25-zhuhai-shenzhen-hongkong/${page}`} />;
+  const params = useParams();
+  const raw = params['*'] || params.page || 'index';
+  const page = raw === 'shenzhen' ? 'zhuhai' : raw === 'chimelong' ? 'zhuhai/chimelong' : raw;
+  return <Navigate replace to={`/2026-09-25-zhuhai-hongkong-guangzhou/${page}`} />;
 }
 
 function App() {
@@ -59,9 +61,10 @@ function App() {
               <Route path="/undated-hongkong-shopping-2025/:page" element={<Navigate replace to="/2016-hongkong-shopping/index" />} />
               <Route path="/undated-xian-nanjing-hangzhou/:page" element={<Navigate replace to="/2019-xian-nanjing-hangzhou/index" />} />
               <Route path="/undated-wuhan/:page" element={<Navigate replace to="/place/wuhan/index" />} />
-              <Route path="/2026-09-24-zhuhai-shenzhen-hongkong/:page" element={<LegacyZhuhaiTripRedirect />} />
-              <Route path="/2026-09-24-zhuhai-shenzhen-hongkong" element={<Navigate replace to="/2026-09-25-zhuhai-shenzhen-hongkong/index" />} />
-              <Route path="/2026-09-25-zhuhai-shenzhen-hongkong/chimelong" element={<Navigate replace to="/2026-09-25-zhuhai-shenzhen-hongkong/zhuhai/chimelong" />} />
+              <Route path="/2026-09-24-zhuhai-shenzhen-hongkong/*" element={<LegacyZhuhaiTripRedirect />} />
+              <Route path="/2026-09-24-zhuhai-shenzhen-hongkong" element={<Navigate replace to="/2026-09-25-zhuhai-hongkong-guangzhou/index" />} />
+              <Route path="/2026-09-25-zhuhai-shenzhen-hongkong/*" element={<LegacyZhuhaiTripRedirect />} />
+              <Route path="/2026-09-25-zhuhai-shenzhen-hongkong" element={<Navigate replace to="/2026-09-25-zhuhai-hongkong-guangzhou/index" />} />
               <Route path="/city/:id" element={<LegacyCityRedirect />} />
               <Route path="/city/:id/:file" element={<LegacyCityRedirect />} />
               <Route path="/:tripId/*" element={<TripDetailPage />} />

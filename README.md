@@ -89,11 +89,11 @@ pnpm deploy:all      # 完整部署流程
 
 ```text
 content/trip/
-├── 2026-09-25-zhuhai-shenzhen-hongkong/
+├── 2026-09-25-zhuhai-hongkong-guangzhou/
 │   ├── README.md       # 行程总览、准备事项
 │   ├── zhuhai.md       # 城市行程与地图点位
-│   ├── shenzhen.md
-│   └── hongkong.md
+│   ├── hongkong.md
+│   └── guangzhou.md
 └── undated-aershan/
     └── README.md       # 单城市、未定日期行程
 
@@ -107,7 +107,7 @@ content/place/wuhan/
 ```markdown
 ---
 type: trip
-title: 珠海 → 深圳 → 香港
+title: 珠海 → 香港 → 广州
 status: planned
 start_date: "2026-09-25"
 ---
