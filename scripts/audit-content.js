@@ -11,13 +11,22 @@ const add = (sev, cat, msg) => issues.push({ sev, cat, msg });
 // ---- 1. 所有游记文档与 frontmatter 契约 ----
 const files = [];
 const root = 'content/trip';
+const markdownFiles = dir => fs.readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
+  const full = path.join(dir, entry.name);
+  return entry.isDirectory() ? markdownFiles(full) : entry.name.endsWith('.md') ? [full] : [];
+});
 for (const trip of fs.readdirSync(root)) {
   const dir = `${root}/${trip}`;
   if (!fs.statSync(dir).isDirectory()) continue;
   const index = `${dir}/README.md`;
   if (!fs.existsSync(index)) { add('ERR', '目录', `${dir} 缺 README.md`); continue; }
-  for (const name of fs.readdirSync(dir).filter(name => name.endsWith('.md'))) {
-    const full = `${dir}/${name}`;
+  for (const full of markdownFiles(dir)) {
+    const name = path.relative(dir, full);
+    const segments = name.split(path.sep);
+    if (segments.length > 1) {
+      const parent = path.join(dir, ...segments.slice(0, -1)) + '.md';
+      if (!fs.existsSync(parent)) add('ERR', '目录', `${full} 缺父页面 ${parent}`);
+    }
     files.push({ trip, name, full, isIndex: name === 'README.md' });
     const meta = fm(fs.readFileSync(full, 'utf8'));
     if (!meta) { add('ERR', 'frontmatter', `${full} 缺 frontmatter`); continue; }
@@ -46,7 +55,7 @@ for (const place of fs.readdirSync('content/place')) {
 // ---- 4. 站内 .md 相对链接是否解析 ----
 for (const f of files) {
   const c = fs.readFileSync(f.full, 'utf8');
-  for (const m of c.matchAll(/\[([^\]]*)\]\((\.\/[^)]+\.md)\)/g)) {
+  for (const m of c.matchAll(/\[([^\]]*)\]\((\.{1,2}\/[^)#?]+\.md)\)/g)) {
     const target = path.join(path.dirname(f.full), m[2]);
     if (!fs.existsSync(target)) add('ERR', '死链', `${f.full} → ${m[2]}（${m[1]}）不存在`);
   }
@@ -55,7 +64,7 @@ for (const f of files) {
 // ---- 5. 图片引用是否存在 ----
 for (const f of files) {
   const c = fs.readFileSync(f.full, 'utf8');
-  for (const m of c.matchAll(/!\[[^\]]*\]\((\.\/[^)]+)\)/g)) {
+  for (const m of c.matchAll(/!\[[^\]]*\]\((\.{1,2}\/[^)]+)\)/g)) {
     const src = path.join(path.dirname(f.full), m[1]);
     if (!fs.existsSync(src)) add('ERR', '死图', `${f.full} → ${m[1]} 不存在`);
     else {

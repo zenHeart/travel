@@ -78,10 +78,10 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       return;
     }
 
-    // 同一游记的兄弟文档
-    const sibling = href.match(/^\.\/([^/#?]+)\.md(?:#(.*))?$/);
+    // 同一游记的相对文档路径，可指向子页或从子页返回城市页。
+    const sibling = href.match(/^(?:\.\/|\.\.\/)[^#?]+\.md(?:#.*)?$/);
     if (sibling && tripId) {
-      const slug = sibling[1];
+      const slug = new URL(href, `https://trip.local/${documentKey}`).pathname.slice(1).replace(/\.md$/, "");
       navigate(`/${tripId}/${slug === "README" ? "index" : slug}`);
       return;
     }
@@ -99,8 +99,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
     // 如果是相对路径，需要转换为绝对路径
     if (src.startsWith("./") || src.startsWith("../")) {
-      // 移除开头的 ./
-      const cleanSrc = src.replace(/^\.\//, "");
+      const cleanSrc = new URL(src, `https://trip.local/${documentKey}`).pathname.slice(1);
 
       // 区分开发环境和生产环境
       const isDev = import.meta.env.DEV;

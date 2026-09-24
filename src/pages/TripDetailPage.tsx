@@ -9,13 +9,15 @@ import { extractToc } from '../utils/toc';
 const statusText = { visited: '已访问', planned: '计划', wishlist: '心愿' };
 
 export function TripDetailPage() {
-  const { tripId, page = 'index' } = useParams();
+  const { tripId, '*': nestedPage } = useParams();
+  const page = nestedPage || 'index';
   const navigate = useNavigate();
   const { getTripById } = useTrips();
   const scrollRef = useRef<HTMLElement>(null);
   const trip = tripId ? getTripById(tripId) : undefined;
   const files = useMemo(() => trip ? [trip.index, ...trip.pages] : [], [trip]);
   const current = files.find(file => file.slug === page);
+  const parent = current?.slug.includes('/') ? files.find(file => file.slug === current.slug.slice(0, current.slug.lastIndexOf('/'))) : undefined;
   const toc = useMemo(() => current ? extractToc(current.content) : [], [current]);
 
   if (!trip || !current) {
@@ -37,7 +39,7 @@ export function TripDetailPage() {
       <div className="mx-auto flex max-w-[1600px] items-center gap-3 px-4 py-3">
         <button onClick={() => navigate('/')} className="rounded-md px-2 py-1 text-sm text-slate-500 hover:bg-slate-100">← 地图</button>
         <div className="h-4 w-px bg-slate-200" aria-hidden />
-        <h1 className="truncate text-base font-semibold text-slate-900">{trip.title}{page !== 'index' && ` / ${current.title}`}</h1>
+        <h1 className="truncate text-base font-semibold text-slate-900">{trip.title}{parent && ` / ${parent.title}`}{page !== 'index' && ` / ${current.title}`}</h1>
         <span className="ml-auto shrink-0 text-xs text-slate-400">{statusText[trip.status]}</span>
       </div>
     </header>

@@ -61,9 +61,10 @@ function App() {
               <Route path="/undated-wuhan/:page" element={<Navigate replace to="/place/wuhan/index" />} />
               <Route path="/2026-09-24-zhuhai-shenzhen-hongkong/:page" element={<LegacyZhuhaiTripRedirect />} />
               <Route path="/2026-09-24-zhuhai-shenzhen-hongkong" element={<Navigate replace to="/2026-09-25-zhuhai-shenzhen-hongkong/index" />} />
+              <Route path="/2026-09-25-zhuhai-shenzhen-hongkong/chimelong" element={<Navigate replace to="/2026-09-25-zhuhai-shenzhen-hongkong/zhuhai/chimelong" />} />
               <Route path="/city/:id" element={<LegacyCityRedirect />} />
               <Route path="/city/:id/:file" element={<LegacyCityRedirect />} />
-              <Route path="/:tripId/:page" element={<TripDetailPage />} />
+              <Route path="/:tripId/*" element={<TripDetailPage />} />
               <Route path="/:tripId" element={<TripDetailPage />} />
             </Routes>
           </Suspense>

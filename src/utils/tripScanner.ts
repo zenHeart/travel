@@ -19,7 +19,7 @@ const indexModules = import.meta.glob('/content/trip/*/README.md', {
   query: '?raw',
   import: 'default',
 });
-const pageModules = import.meta.glob('/content/trip/*/*.md', {
+const pageModules = import.meta.glob('/content/trip/*/**/*.md', {
   eager: true,
   query: '?raw',
   import: 'default',
@@ -67,9 +67,18 @@ export function scanTrips(): Trip[] {
       .filter(([pagePath]) => pagePath.startsWith(`/content/trip/${id}/`) && pagePath !== path)
       .map(([pagePath, pageRaw]) => {
         const pageContent = pageRaw as string;
-        return document(pagePath.split('/').at(-1)!, pageContent, frontmatter(pageContent));
-      })
-      .sort((a, b) => a.order - b.order || a.name.localeCompare(b.name));
+        return document(pagePath.slice(`/content/trip/${id}/`.length), pageContent, frontmatter(pageContent));
+      });
+    const bySlug = new Map(pages.map(page => [page.slug, page]));
+    pages.sort((a, b) => {
+      const rootA = a.slug.split('/')[0];
+      const rootB = b.slug.split('/')[0];
+      return (bySlug.get(rootA)?.order ?? a.order) - (bySlug.get(rootB)?.order ?? b.order)
+        || rootA.localeCompare(rootB)
+        || a.slug.split('/').length - b.slug.split('/').length
+        || a.order - b.order
+        || a.name.localeCompare(b.name);
+    });
 
     const title = meta.title;
     const status = meta.status;
