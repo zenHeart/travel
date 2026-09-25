@@ -41,30 +41,17 @@ sources:
 
 1. **未完成**
 
-   - [ ] <span class="task-tag">住宿</span> **确认凌晨入住与保房**：通过美团联系未见海公寓，说明 9 月 26 日约 `01:00–02:00` 到店，请保留 25 日入住的房间，并确认夜间办理入住方式。
-   - [ ] <span class="task-tag">证件</span> 把三人出行证件原件装入随身包，保存可离线打开的机票、船票、高铁和酒店订单。
-   - [ ] <span class="task-tag">交通</span> 办理 9 月 25 日武汉 → 珠海航班值机，落实托运行李及珠海机场到未见海公寓的接送；需要儿童座椅时提前预约。
-   - [ ] <span class="task-tag">交通</span> 完成 9 月 30 日 G6524、10 月 3 日 G1032 的孩子儿童票／免费随行登记；成人票已购。[香港登记方法](./hongkong.md#乘车与儿童登记)
-   - [ ] <span class="task-tag">办卡</span> 按[办卡指南](./hongkong/banking.md)安装所需 App，测试移民局 12367 和邮箱，准备本人证件及银行要求的材料。
-   - [ ] <span class="task-tag">通信支付</span> 两位成人开通香港语音、短信漫游，确认已购流量包的生效方式；接码的内地 SIM 保持启用。[运营商入口](https://www.10086.cn/roaming/yewu/ktgn/)
-   - [ ] <span class="task-tag">通信支付</span> 准备香港零用现金和可用银行卡，留好酒店押金额度；八达通到港后购买、充值。
-   - [ ] <span class="task-tag">行李</span> 装好充电器、线、港式英标转换插头和合规充电宝；充电宝随身。[民航局要求](https://www.caac.gov.cn/XWZX/MHYW/202506/t20250626_227805.html)
-   - [ ] <span class="task-tag">行李</span> 装好孩子替换衣物、常用药、体温计、安抚物／薄毯，以及防晒、帽子、薄外套、水杯、纸巾湿巾和折叠伞。
-   - [ ] <span class="task-tag">行李</span> 备好海洋王国雨衣（成人 2 件、儿童 1 件及备用）、孩子衣裤袜 2 套、成人备用上衣、小毛巾、湿衣袋与手机防水袋。
-   - [ ] <span class="task-tag">住宿</span> 联系皇家太平洋，确认 9 月 30 日退房后行李可寄存至 `15:30–16:00`。
-   - [ ] <span class="task-tag">住宿</span> 向广州希诺农讲所店报备 9 月 30 日约 `20:30–21:00` 到店并保留房间；确认 2 大 1 小入住、实际房型及儿童早餐收费。
    - [ ] <span class="task-tag">交通</span> **购买 2026-10-01 顺德去程城际**：拟选 **C7629 广州南 `09:42` → 北滘 `09:50`**，目前未购；按 2 大 1 小办理车票／随行登记，以 [12306](https://kyfw.12306.cn/otn/leftTicket/init) 实际可售为准。
    - [ ] <span class="task-tag">交通</span> **购买 2026-10-01 顺德回程城际**：拟选 **C6936 顺德 `16:07` → 广州南 `16:17`**，目前未购；与去程分别购票，并办理孩子乘车登记。
-   - [ ] <span class="task-tag">预约</span> 购买 10 月 1 日清晖园门票，选择覆盖 `10:30` 入园的时段，办理儿童登记。[购票说明](https://www.sdqinghuiyuan.cn/list/foldId/24/tid/26.html)
-   - [ ] <span class="task-tag">预约</span> 联系凤城酒家（凤城食都店）预订 10 月 1 日 `12:00` 午餐和儿童椅，确认茶位与最低消费；电话见[广州与顺德](./guangzhou.md#吃)。
-   - [ ] <span class="task-tag">交通</span> 约好 10 月 3 日 `21:48` 后钟祥南接站，发送车次并约定出站口。
-   - [ ] <span class="task-tag">行李</span> 10 月 2 日晚备好回程车上的晚餐、饮水和安静玩具。
+   - [ ] <span class="task-tag">门票</span> **购买 10 月 1 日清晖园门票**，计划 `10:30` 入园；儿童按[官方购票说明](https://www.sdqinghuiyuan.cn/list/foldId/24/tid/26.html)办理。
+   - [ ] <span class="task-tag">预约</span> **预订凤城酒家（凤城食都店）10 月 1 日 `12:00` 午餐**，2 大 1 小；电话见[广州与顺德](./guangzhou.md#吃)。
+   - [ ] <span class="task-tag">办卡</span> **9 月 29 日到港后提交中银香港开户申请**；操作与材料见[办卡指南](./hongkong/banking.md)，工银亚洲 VTM 为备选，结果以银行审核为准。
 
 2. **已完成**
 
    - [x] <span class="task-tag">证件</span> 三人港澳通行证及香港签注已办。
    - [x] <span class="task-tag">交通</span> 已购 9 月 25 日武汉 → 珠海机票。
-   - [x] <span class="task-tag">住宿</span> 已订 9 月 25–27 日未见海公寓（横琴海洋王国店）。
+   - [x] <span class="task-tag">住宿</span> 已订 9 月 25–27 日未见海公寓（横琴海洋王国店），凌晨入住与保房已确认。
    - [x] <span class="task-tag">住宿</span> 已订 9 月 27–28 日企鹅酒店＋海洋王国两日家庭套票。
    - [x] <span class="task-tag">住宿</span> 已订 9 月 28–29 日麗枫酒店（珠海拱北情侣路吉大店）。
    - [x] <span class="task-tag">交通</span> 已购 9 月 29 日 `09:30` 九洲港 → 香港中港城船票。

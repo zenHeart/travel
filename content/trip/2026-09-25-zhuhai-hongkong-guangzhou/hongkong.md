@@ -100,7 +100,7 @@ sources:
 
 ## 乘车与儿童登记
 
-孩子免费随行登记与具体座位仍待核对。按乘车日年龄，未满 6 岁、不单独占座的孩子可由一名年满 18 岁的成人免费携带；要独立座位则需儿童票。[港铁车票类别](https://www.highspeed.mtr.com.hk/tc/ticket/ticket-type.html)
+孩子免费随行登记与具体座位信息未提供，以下保留办理说明。按乘车日年龄，未满 6 岁、不单独占座的孩子可由一名年满 18 岁的成人免费携带；要独立座位则需儿童票。[港铁车票类别](https://www.highspeed.mtr.com.hk/tc/ticket/ticket-type.html)
 
 成人票已买后，在 12306「订单 → 已支付 → 免费乘车儿童申报」关联同行成人和孩子，核验成功关联到 **9 月 30 日 G6524**；只加入常用乘车人不算完成。第三方出票且无法办理时联系出票渠道或铁路人员。[港铁操作说明](https://www.highspeed.mtr.com.hk/sc/latest-news/ticketing-via-12306-purchase-ticket.html)
 
