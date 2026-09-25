@@ -32,6 +32,24 @@
     overflow: hidden;
   }
 
+  a[href],
+  button:not(:disabled),
+  input[type="checkbox"]:not(:disabled),
+  summary,
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+
+  :is(a, button, input, summary, [tabindex]):focus-visible {
+    outline: 2px solid #0f766e;
+    outline-offset: 3px;
+  }
+
+  button:disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+
   @media (max-width: 768px) {
     body {
       font-size: 14px;
@@ -111,6 +129,15 @@
 
   .markdown-content {
     @apply text-left;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    user-select: text;
+    -webkit-user-select: text;
+    line-height: 1.75;
+  }
+
+  .markdown-content > :first-child {
+    margin-top: 0;
   }
 
   .markdown-content h1,
@@ -123,7 +150,8 @@
   }
 
   .markdown-content p {
-    @apply text-left text-gray-700 leading-relaxed mb-4;
+    @apply text-left text-gray-700 mb-4;
+    line-height: 1.75;
   }
 
   .markdown-content ul,
@@ -132,11 +160,16 @@
   }
 
   .markdown-content li {
-    @apply text-left text-gray-700 leading-relaxed;
+    @apply text-left text-gray-700;
+    line-height: 1.75;
   }
 
   .markdown-content blockquote {
     @apply text-left;
+  }
+
+  .markdown-content blockquote > :last-child {
+    margin-bottom: 0;
   }
 
   .markdown-content table {
@@ -154,6 +187,7 @@
 
   .markdown-content a {
     @apply text-blue-600 hover:text-blue-800 underline;
+    text-underline-offset: 0.2em;
   }
 
   .markdown-content code {
@@ -168,25 +202,122 @@
     @apply bg-transparent text-gray-100 p-0;
   }
 
-  /* HTML 表格样式支持 */
+  .markdown-table-scroll {
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    margin-block: 1.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .markdown-content table {
-    @apply min-w-full border border-gray-300 my-4;
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+    line-height: 1.75;
+    overflow-wrap: normal;
   }
 
-  .markdown-content thead th {
-    @apply border border-gray-300 px-4 py-2 bg-gray-100 font-medium text-left;
+  .markdown-content :is(th, td) {
+    min-width: 10rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e2e8f0;
+    border-right: 1px solid #e2e8f0;
+    text-align: left;
+    vertical-align: top;
   }
 
-  .markdown-content tbody tr td {
-    @apply border border-gray-300 px-4 py-2 text-left;
+  .markdown-content :is(th, td):first-child {
+    min-width: 7rem;
+  }
+
+  .markdown-content :is(th, td):last-child {
+    min-width: 16rem;
+    border-right: 0;
   }
 
   .markdown-content th {
-    @apply border border-gray-300 px-4 py-2 bg-gray-100 font-medium text-left;
+    background: #f8fafc;
+    font-weight: 600;
+    white-space: nowrap;
   }
 
-  .markdown-content td {
-    @apply border border-gray-300 px-4 py-2 text-left;
+  .markdown-content tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .markdown-content tbody tr:nth-child(even) {
+    background: #f8fafc;
+  }
+
+  .markdown-content td :is(a, code) {
+    overflow-wrap: anywhere;
+  }
+
+  .markdown-content .trip-timeline {
+    margin: 1.25rem 0 1.5rem 0.375rem;
+    padding-left: 1.5rem;
+    border-left: 1px solid #cbd5e1;
+    list-style: none;
+  }
+
+  .markdown-content .trip-timeline > li {
+    position: relative;
+    padding: 0 0 1rem;
+  }
+
+  .markdown-content .trip-timeline > li:last-child {
+    padding-bottom: 0;
+  }
+
+  .trip-timeline > li::before {
+    content: "";
+    position: absolute;
+    top: 0.5rem;
+    left: -1.8125rem;
+    width: 0.5625rem;
+    height: 0.5625rem;
+    border: 2px solid #0f766e;
+    border-radius: 50%;
+    background: white;
+  }
+
+  .markdown-content .trip-timeline > li > code:first-child,
+  .markdown-content .trip-timeline > li > strong:first-child > code:first-child {
+    display: table;
+    margin-bottom: 0.25rem;
+    color: #115e59;
+    background: #f0fdfa;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .markdown-content .task-item {
+    position: relative;
+    min-height: 2.75rem;
+    padding: 0.5rem 0 0.5rem 2.75rem;
+  }
+
+  .task-checkbox {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: inline-flex;
+    width: 2.75rem;
+    height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .task-checkbox input {
+    width: 1rem;
+    height: 1rem;
+    accent-color: #0d9488;
   }
 }
 /* GFM 在松散列表项里包一层段落；待办项的文字需与复选框同行。 */

@@ -53,16 +53,15 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
   if (items.length < 2) return null;
 
   const jump = (id: string) => {
-    const root = scrollRef.current;
-    const el = root?.querySelector<HTMLElement>(`#${CSS.escape(id)}`);
-    if (!root || !el) return;
-    const top =
-      el.getBoundingClientRect().top -
-      root.getBoundingClientRect().top +
-      root.scrollTop -
-      12;
-    root.scrollTo({ top, behavior: 'smooth' });
-    setActiveId(id);
+    // 等待小屏目录收起后再量位置，避免把展开面板的高度算进落点。
+    requestAnimationFrame(() => {
+      const root = scrollRef.current;
+      const el = root?.querySelector<HTMLElement>(`#${CSS.escape(id)}`);
+      if (!root || !el) return;
+      const top = el.getBoundingClientRect().top - root.getBoundingClientRect().top + root.scrollTop - 16;
+      root.scrollTo({ top, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      setActiveId(id);
+    });
   };
 
   const activeText = items.find((i) => i.id === activeId)?.text;
@@ -82,7 +81,7 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
                 onClick={() => jump(it.id)}
                 aria-current={active ? 'true' : undefined}
                 className={[
-                  'block w-full border-l py-1.5 text-left text-[13px] leading-snug transition-colors lg:py-1',
+                  'block min-h-11 w-full border-l py-2 text-left text-[13px] leading-relaxed transition-colors lg:min-h-0 lg:py-1.5',
                   it.level === 3 ? 'pl-5 pr-2' : 'pl-3 pr-2',
                   active
                     ? 'border-teal-600 font-medium text-teal-800'

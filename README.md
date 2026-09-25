@@ -136,6 +136,20 @@ order: 1
 
 武汉属于常驻地，使用 `type: place` 放在 `content/place/wuhan/`，不计入游记时间轴或心愿。首页和地图进入 `#/place/wuhan/index`；腾旅卡数据与页面属于武汉，路径为 `#/place/wuhan/tenglv`。
 
+## 按偏好生成攻略
+
+本项目统一使用 [travel-guide-writer](.claude/skills/travel-guide-writer/SKILL.md)。可以一次提出：
+
+> 用 travel-guide-writer，按我的已确认偏好，为「目的地、日期、同行人」生成可执行攻略；已有订单见「文件或本轮资料」。完成必要核验、总览准备清单、逐日时间轴、吃与景点，并检查实际页面。
+
+技能会复用已确认偏好，只补问影响路线或住房可行性的缺口；本次预算、孩子年龄、行李和旧酒店不会被当成永久默认。未确定的内容保持待确认，不自动订票订房。偏好统一维护在 [偏好与证据](.claude/skills/travel-guide-writer/references/traveler-preferences.md)。
+
+新攻略格式检查只针对指定行程，不要求历史游记迁移：
+
+```bash
+node .claude/skills/travel-guide-writer/scripts/validate-guide.mjs content/trip/<行程 ID>
+```
+
 ## 技术栈
 
 - **框架**: React 19 + TypeScript

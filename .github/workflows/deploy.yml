@@ -59,6 +59,11 @@ jobs:
       - name: Run map regression tests
         run: pnpm test:map
 
+      - name: Validate travel content and guide rules
+        run: |
+          pnpm audit-content
+          node --test .claude/skills/travel-guide-writer/scripts/validate-guide.test.mjs
+
   # 构建项目
   build:
     runs-on: ubuntu-latest
@@ -106,6 +111,10 @@ jobs:
           mkdir -p dist/content
           # 复制content目录中的所有图片文件到dist/content
           find content -type f \( -name "*.jpg" -o -name "*.jpeg" -o -name "*.png" -o -name "*.gif" -o -name "*.webp" -o -name "*.svg" \) -exec cp --parents {} dist/ \;
+
+      - name: Record deployed revision
+        run: |
+          node -e 'require("node:fs").writeFileSync("dist/version.json", JSON.stringify({ commit: process.env.GITHUB_SHA }) + "\n")'
 
       - name: Upload build artifacts
         uses: actions/upload-pages-artifact@v3

@@ -32,7 +32,7 @@ export const MarkdownContent: React.FC<MarkdownContentProps> = ({
 
   return (
     <div className={className}>
-      <MarkdownRenderer content={currentFile.content} basePath={basePath} documentKey={currentFile.name} toc={toc} />
+      <MarkdownRenderer key={`${basePath}/${currentFile.name}`} content={currentFile.content} basePath={basePath} documentKey={currentFile.name} toc={toc} />
     </div>
   );
 };

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 interface NavPanelProps {
   label: string;
-  /** 收起时显示在标题右侧的当前项 */
+  /** 折叠入口优先显示的当前项；label 保留为无障碍名称 */
   summary?: string;
   variant: 'rail' | 'collapse';
   children: React.ReactNode;
@@ -23,9 +23,6 @@ export const NavPanel: React.FC<NavPanelProps> = ({
   if (variant === 'rail') {
     return (
       <nav aria-label={label}>
-        <p className="px-2 pb-2 text-[11px] font-medium tracking-wide text-slate-400">
-          {label}
-        </p>
         {children}
       </nav>
     );
@@ -35,15 +32,13 @@ export const NavPanel: React.FC<NavPanelProps> = ({
     <nav aria-label={label} className="rounded-lg border border-slate-200">
       <button
         onClick={() => setOpen((v) => !v)}
+        aria-label={summary ? `${label}：${summary}` : label}
         aria-expanded={open}
-        className="flex w-full items-center gap-2 px-3 py-2.5 text-left"
+        className="flex min-h-11 w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left hover:bg-slate-50"
       >
-        <span className="text-[13px] font-medium text-slate-500">{label}</span>
-        {summary && (
-          <span className="min-w-0 flex-1 truncate text-sm text-slate-900">
-            {summary}
-          </span>
-        )}
+        <span className="min-w-0 flex-1 truncate text-sm text-slate-900">
+          {summary || label}
+        </span>
         <svg
           aria-hidden
           viewBox="0 0 20 20"

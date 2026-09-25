@@ -1,11 +1,12 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { TripDocument } from '../../types/trip';
 import { NavPanel } from './NavPanel';
 
 interface DocNavProps {
   files: TripDocument[];
   activeFile: string;
-  onSelect: (fileName: string) => void;
+  basePath: string;
   variant: 'rail' | 'collapse';
 }
 
@@ -13,7 +14,7 @@ interface DocNavProps {
 export const DocNav: React.FC<DocNavProps> = ({
   files,
   activeFile,
-  onSelect,
+  basePath,
   variant,
 }) => {
   if (files.length <= 1) return null;
@@ -31,11 +32,11 @@ export const DocNav: React.FC<DocNavProps> = ({
         const parentActive = current?.slug.startsWith(`${file.slug}/`);
         return (
           <li key={file.name}>
-            <button
-              onClick={() => onSelect(file.name)}
+            <Link
+              to={`/${basePath}/${file.slug}`}
               aria-current={active ? 'page' : undefined}
               className={[
-                'flex w-full items-stretch gap-2 rounded-md py-2 pr-2 text-left transition-colors lg:py-1.5',
+                'flex min-h-11 w-full items-center gap-2 rounded-md py-2 pr-2 text-left transition-colors lg:min-h-0 lg:py-2',
                 active
                   ? 'bg-teal-50 text-teal-900'
                   : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900',
@@ -43,12 +44,12 @@ export const DocNav: React.FC<DocNavProps> = ({
             >
               <span
                 aria-hidden
-                className={['w-0.5 shrink-0 rounded-full', active ? 'bg-teal-600' : 'bg-transparent'].join(' ')}
+                className={['w-0.5 shrink-0 self-stretch rounded-full', active ? 'bg-teal-600' : 'bg-transparent'].join(' ')}
               />
-              <span className={['min-w-0 truncate text-sm', active ? 'font-semibold' : parentActive ? 'font-medium text-teal-800' : 'font-normal'].join(' ')}>
+              <span className={['min-w-0 text-sm leading-relaxed', active ? 'font-semibold' : parentActive ? 'font-medium text-teal-800' : 'font-normal'].join(' ')}>
                 {file.title || file.name}
               </span>
-            </button>
+            </Link>
             {childrenOf(file).length > 0 && renderPages(file)}
           </li>
         );
@@ -57,7 +58,7 @@ export const DocNav: React.FC<DocNavProps> = ({
   );
 
   return (
-    <NavPanel label="行程分页" summary={current?.title} variant={variant}>
+    <NavPanel label="行程导航" summary={current?.title} variant={variant}>
       {renderPages()}
     </NavPanel>
   );

@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkFrontmatter from "remark-frontmatter";
 import rehypeRaw from "rehype-raw";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ImagePreview } from "../Common/ImagePreview";
 import { TocItem } from "../../utils/toc";
 
@@ -17,24 +17,45 @@ interface MarkdownRendererProps {
 
 const TaskCheckbox: React.FC<{
   storageKey: string;
+  legacyPrefix: string;
+  taskText: string;
+  occurrence: number;
   initialChecked: boolean;
   label: string;
-}> = ({ storageKey, initialChecked, label }) => {
+}> = ({ storageKey, legacyPrefix, taskText, occurrence, initialChecked, label }) => {
   const [checked, setChecked] = useState(() => {
     try {
       const saved = localStorage.getItem(storageKey);
-      return saved === null ? initialChecked : saved === "1";
+      if (saved !== null) return saved === "1";
+
+      // 旧键包含源码行号；只接续同一文档中原文完全相同的任务。
+      const legacyKeys: { key: string; line: number }[] = [];
+      for (let index = 0; index < localStorage.length; index += 1) {
+        const key = localStorage.key(index);
+        if (!key?.startsWith(legacyPrefix)) continue;
+        const entry = key.slice(legacyPrefix.length).match(/^(\d+):([\s\S]*)$/);
+        if (entry?.[2] === taskText) legacyKeys.push({ key, line: Number(entry[1]) });
+      }
+      const legacyKey = legacyKeys.sort((a, b) => a.line - b.line)[occurrence]?.key;
+      const legacyValue = legacyKey ? localStorage.getItem(legacyKey) : null;
+      if (legacyValue === null) return initialChecked;
+      try {
+        localStorage.setItem(storageKey, legacyValue);
+      } catch {
+        // 写入受限时仍显示读到的旧状态，保留原键以便下次重试。
+      }
+      return legacyValue === "1";
     } catch {
       return initialChecked;
     }
   });
 
   return (
-    <input
+    <label className="task-checkbox">
+      <input
       type="checkbox"
       checked={checked}
       aria-label={label}
-      className="mr-2 accent-teal-600"
       onChange={(event) => {
         const next = event.target.checked;
         setChecked(next);
@@ -44,7 +65,8 @@ const TaskCheckbox: React.FC<{
           // Storage may be unavailable; the checkbox still works until reload.
         }
       }}
-    />
+      />
+    </label>
   );
 };
 
@@ -55,39 +77,43 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   documentKey = "",
   toc = [],
 }) => {
-  const navigate = useNavigate();
+  const location = useLocation();
   const [previewImage, setPreviewImage] = useState<{
     src: string;
     alt?: string;
   } | null>(null);
 
   const tripId = basePath.split("/").at(-1) || "";
+  const taskKeys = useMemo(() => {
+    const occurrences = new Map<string, number>();
+    return content.split("\n").map((line) => {
+      const task = line.match(/^\s*(?:[-*+]|\d+[.)]) \[([ xX])\]\s+(.+)$/);
+      if (!task) return null;
+      const text = task[2];
+      const occurrence = occurrences.get(text) ?? 0;
+      occurrences.set(text, occurrence + 1);
+      return { checked: task[1].toLowerCase() === "x", text, occurrence, key: `${text}:${occurrence}` };
+    });
+  }, [content]);
 
-  const handleInternalLink = (href: string) => {
+  const resolveDocumentLink = (href: string): string | undefined => {
     // [[城市ID]] 或 [[城市ID|显示文本]]
     const wiki = href.match(/^\[\[([^|\]]+)(?:\|([^\]]+))?\]\]$/);
     if (wiki) {
-      navigate(`/${wiki[1]}/index`);
-      return;
+      return `/${wiki[1]}/index`;
     }
 
     // 页内锚点
     if (href.startsWith("#")) {
-      const el = document.getElementById(decodeURIComponent(href.slice(1)));
-      el?.scrollIntoView({ behavior: "smooth", block: "start" });
-      return;
+      return `${location.pathname}${href}`;
     }
 
     // 同一游记的相对文档路径，可指向子页或从子页返回城市页。
     const sibling = href.match(/^(?:\.\/|\.\.\/)[^#?]+\.md(?:#.*)?$/);
     if (sibling && tripId) {
-      const slug = new URL(href, `https://trip.local/${documentKey}`).pathname.slice(1).replace(/\.md$/, "");
-      navigate(`/${tripId}/${slug === "README" ? "index" : slug}`);
-      return;
-    }
-
-    if (href.startsWith("http")) {
-      window.open(href, "_blank", "noopener,noreferrer");
+      const target = new URL(href, `https://trip.local/${documentKey}`);
+      const slug = target.pathname.slice(1).replace(/\.md$/, "");
+      return `/${basePath}/${slug === "README" ? "index" : slug}${target.hash}`;
     }
   };
 
@@ -129,17 +155,18 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
           components={{
             input: ({ type, ...props }) => type === 'checkbox' ? null : <input type={type} {...props} />,
             // 自定义链接处理
-            a: ({ href, children, ...props }) => {
+            a: ({ node: _node, href, children, ...props }) => {
               if (href) {
+                const documentLink = resolveDocumentLink(href);
+                if (documentLink) {
+                  return <Link {...props} to={documentLink}>{children}</Link>;
+                }
                 return (
                   <a
                     {...props}
                     href={href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleInternalLink(href);
-                    }}
-                    className="text-blue-600 hover:text-blue-800 underline"
+                    target={/^https?:\/\//.test(href) ? "_blank" : undefined}
+                    rel={/^https?:\/\//.test(href) ? "noopener noreferrer" : undefined}
                   >
                     {children}
                   </a>
@@ -148,7 +175,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
               return <a {...props}>{children}</a>;
             },
             // 自定义图片处理
-            img: ({ src, alt, ...props }) => {
+            img: ({ node: _node, src, alt, ...props }) => {
               const resolvedSrc = src ? resolveImagePath(src) : "";
 
               return (
@@ -156,8 +183,17 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
                   {...props}
                   src={resolvedSrc}
                   alt={alt}
-                  className="max-w-full h-auto rounded-lg shadow-md cursor-pointer hover:shadow-lg transition-shadow duration-200 my-4 block"
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`放大图片：${alt || "行程图片"}`}
+                  className="max-w-full h-auto rounded-lg shadow-md cursor-zoom-in hover:shadow-lg transition-shadow duration-200 my-4 block"
                   onClick={() => setPreviewImage({ src: resolvedSrc, alt })}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      setPreviewImage({ src: resolvedSrc, alt });
+                    }
+                  }}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.style.display = "none";
@@ -167,9 +203,6 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
                     errorDiv.textContent = `图片加载失败: ${alt || "未知图片"}`;
                     target.parentNode?.insertBefore(errorDiv, target);
                   }}
-                  onLoad={() => {
-                    console.log("图片加载成功:", resolvedSrc);
-                  }}
                 />
               );
             },
@@ -177,7 +210,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
             h1: ({ children, ...props }) => (
               <h1
                 {...props}
-                className="text-3xl font-bold text-gray-900 mb-6 mt-8 text-left"
+                className="text-3xl font-bold text-gray-900 mb-6 mt-8 first:mt-0 text-left"
               >
                 {children}
               </h1>
@@ -212,30 +245,18 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
             p: ({ children, ...props }) => (
               <p
                 {...props}
-                className="text-gray-700 leading-relaxed mb-4 text-left"
+                className="text-gray-700 mb-4 text-left"
               >
                 {children}
               </p>
             ),
             // 自定义代码块样式
-            code: ({ children, className, ...props }) => {
-              const isInline = !className;
-              if (isInline) {
-                return (
-                  <code
-                    {...props}
-                    className="bg-gray-100 text-gray-800 px-1 py-0.5 rounded text-sm font-mono"
-                  >
-                    {children}
-                  </code>
-                );
-              }
+            code: ({ node: _node, children, className, ...props }) => {
+              const isTime = /^\d{1,2}:\d{2}(?:[–—~-]\d{1,2}:\d{2})?$/.test(String(children));
               return (
-                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
-                  <code {...props} className="text-sm font-mono">
-                    {children}
-                  </code>
-                </pre>
+                <code {...props} className={[className, isTime ? "whitespace-nowrap" : ""].filter(Boolean).join(" ")}>
+                  {children}
+                </code>
               );
             },
             // 自定义引用样式
@@ -248,70 +269,60 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
               </blockquote>
             ),
             // 自定义列表样式
-            ul: ({ children, ...props }) => (
+            ul: ({ children, className, ...props }) => (
               <ul
                 {...props}
-                className="list-disc list-outside ml-6 space-y-1 my-4 text-left"
+                className={`list-disc list-outside ${className?.includes('contains-task-list') ? 'ml-0' : 'ml-6'} space-y-1 my-4 text-left`}
               >
                 {children}
               </ul>
             ),
-            ol: ({ children, ...props }) => (
-              <ol
-                {...props}
-                className="list-decimal list-outside ml-6 space-y-1 my-4 text-left"
-              >
+            ol: ({ node, children, ...props }) => {
+              const start = node?.position?.start.line ?? 0;
+              const heading = toc.filter((item) => item.line < start).at(-1);
+              const entries = content.split("\n").slice(start - 1, node?.position?.end.line)
+                .filter((line) => /^\d+[.)]\s/.test(line));
+              const isTimeline = heading && /^\d{4}-\d{2}-\d{2}\b/.test(heading.text)
+                && entries.length > 0 && entries.every((line) => /^\d+[.)]\s+(?:\*\*|__)?`[^`]+`/.test(line));
+              return <ol {...props} className={isTimeline ? "trip-timeline" : "list-decimal list-outside ml-6 space-y-1 my-4 text-left"}>
                 {children}
-              </ol>
-            ),
+              </ol>;
+            },
             // 自定义列表项样式
             li: ({ node, children, className, ...props }) => {
               const line = node?.position?.start.line ?? 0;
-              const source = content.split("\n")[line - 1] ?? "";
-              const task = source.match(/^\s*(?:[-*+]|\d+[.)]) \[([ xX])\]\s+(.+)$/);
+              const task = taskKeys[line - 1];
               if (task) {
-                const storageKey = `travel:checklist:${basePath}:${documentKey}:${line}:${task[2]}`;
+                const storageKey = `travel:checklist:v2:${basePath}:${documentKey}:${task.key}`;
                 const taskChildren = React.Children.toArray(children).flatMap((child) =>
                   React.isValidElement<{ children?: React.ReactNode }>(child) && child.type === 'p'
                     ? React.Children.toArray(child.props.children)
                     : child
                 );
                 return (
-                  <li {...props} className="task-item list-none text-gray-700 leading-relaxed">
+                  <li {...props} className="task-item list-none text-gray-700">
                     <TaskCheckbox
+                      key={storageKey}
                       storageKey={storageKey}
-                      initialChecked={task[1].toLowerCase() === 'x'}
-                      label={task[2].replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')}
+                      legacyPrefix={`travel:checklist:${basePath}:${documentKey}:`}
+                      taskText={task.text}
+                      occurrence={task.occurrence}
+                      initialChecked={task.checked}
+                      label={task.text.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/[*`]/g, '')}
                     />
                     {taskChildren}
                   </li>
                 );
               }
-              return <li {...props} className={`text-gray-700 leading-relaxed ${className?.includes('task-list-item') ? 'list-none pl-0' : 'pl-2'}`}>{children}</li>;
+              return <li {...props} className={`text-gray-700 ${className?.includes('task-list-item') ? 'list-none pl-0' : 'pl-2'}`}>{children}</li>;
             },
             // 自定义表格样式
-            table: ({ children, ...props }) => (
-              <div className="overflow-x-auto my-4">
-                <table {...props} className="min-w-full border border-gray-300">
+            table: ({ node: _node, children, ...props }) => (
+              <div className="markdown-table-scroll" role="region" aria-label="表格，可横向滚动" tabIndex={0}>
+                <table {...props}>
                   {children}
                 </table>
               </div>
-            ),
-            th: ({ children, ...props }) => (
-              <th
-                {...props}
-                className="border border-gray-300 px-4 py-2 bg-gray-100 font-medium text-left"
-              >
-                {children}
-              </th>
-            ),
-            td: ({ children, ...props }) => (
-              <td
-                {...props}
-                className="border border-gray-300 px-4 py-2 text-left"
-              >
-                {children}
-              </td>
             ),
           }}
         >
