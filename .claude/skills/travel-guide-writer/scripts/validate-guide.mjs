@@ -58,7 +58,11 @@ function readDocument(file) {
     if (event !== 'enter') continue;
     if (type === 'atxHeading') headingLevels.set(start.line, body.slice(start.offset, end.offset).match(/^#+/)[0].length);
     if (type === 'listItemPrefix') listStack.at(-1)?.items.push({ line: start.line, text: lines[start.line - 1].slice(end.column - 1), task: false, lists: [] });
-    if (type === 'taskListCheck' && listStack.at(-1)?.items.at(-1)) listStack.at(-1).items.at(-1).task = true;
+    if (type === 'taskListCheck' && listStack.at(-1)?.items.at(-1)) {
+      const item = listStack.at(-1).items.at(-1);
+      item.task = true;
+      item.checked = body.slice(start.offset, end.offset).toLowerCase() === '[x]';
+    }
     if (type === 'resourceDestinationString' || type === 'definitionDestinationString') {
       links.push({ href: body.slice(start.offset, end.offset), line: start.line, image: linkStack.at(-1) === 'image', definition: type === 'definitionDestinationString' });
     }
@@ -154,12 +158,27 @@ export function validateGuide(input) {
         for (const preparation of preparations) {
           const end = sectionEnd(doc, preparation);
           for (const [line, level] of doc.headingLevels) {
-            if (line > preparation.line && line < end && level > 2) add(file, line, '准备分类', '准备类别使用编号列表，不使用 h3–h6 标题');
+            if (line > preparation.line && line < end && level > 2) add(file, line, '准备分类', '准备区只用编号状态类别「未完成」「已完成」，不使用 h3–h6 标题');
           }
           const groups = doc.lists.filter((list) => list.depth === 0 && list.line > preparation.line && list.line < end);
-          if (groups.length !== 1 || !groups[0].ordered) add(file, preparation.line, '准备分类', '准备事项需为一个分类有序列表，各分类下嵌套 checkbox');
+          if (groups.length > 1 || groups.some((group) => !group.ordered)) add(file, preparation.line, '准备分类', '准备事项需为一个有序列表，按「未完成」「已完成」分组；省略空类别');
+          let previousState = -1;
           for (const group of groups) for (const category of group.items) {
-            if (category.task || category.lists.length === 0 || category.lists.some((list) => list.ordered || list.items.some((item) => !item.task))) add(file, category.line, '准备分类', '每个编号类别下必须嵌套无序 checkbox 清单');
+            const title = category.text.trim().replace(/^(?:\*\*|__)(.*)(?:\*\*|__)$/, '$1').trim();
+            const state = ['未完成', '已完成'].indexOf(title);
+            if (state < 0 || state <= previousState) add(file, category.line, '准备分类', '只允许「未完成」「已完成」两个状态类别，按此顺序各出现一次；可省略空类别');
+            if (state >= 0) previousState = state;
+            if (category.task || category.lists.length !== 1 || category.lists.some((list) => list.ordered || list.items.length === 0 || list.items.some((item) => !item.task || item.lists.length))) {
+              add(file, category.line, '准备分类', '每个状态类别下需有一层无序 checkbox 清单，不保留空类别或嵌套子类');
+            }
+            for (const list of category.lists) for (const item of list.items) {
+              if (!item.task) continue;
+              if (state >= 0 && item.checked !== (state === 1)) add(file, item.line, '准备状态', `「${title}」类别只使用 ${state === 1 ? '[x]' : '[ ]'}，不得混放完成状态`);
+              const tag = item.text.trim().match(/^\[[ xX]\]\s+<span\s+class=(["'])task-tag\1>([^<>\r\n]+)<\/span>\s+\S/);
+              if (!tag || !tag[2].trim()) {
+                add(file, item.line, '准备标签', '每个准备项在 checkbox 后用 <span class="task-tag">主题</span> 开头，再写具体动作；主题不另拆分组');
+              }
+            }
           }
         }
       }

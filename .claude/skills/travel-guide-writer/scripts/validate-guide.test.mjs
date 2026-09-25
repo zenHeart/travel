@@ -11,7 +11,8 @@ const script = fileURLToPath(new URL('./validate-guide.mjs', import.meta.url));
 const root = fileURLToPath(new URL('../../../../', import.meta.url));
 const frontmatter = (meta, body) => `---\n${meta}\n---\n\n${body}\n`;
 const city = (day = '2026-09-25', steps = '1. `约 09:30–10:30` 早餐。\n2. **`出站后`** 取行李。') => frontmatter('type: city\nchinese_name: 测试城', `# 测试城\n\n## 行程\n\n### ${day} · 抵达\n\n出发前按订单核对。\n\n${steps}\n\n## 吃\n\n- 早餐\n\n## 景点\n\n- 海边`);
-const overview = (preparation = '## 出发准备\n\n1. 证件\n\n   - [ ] 带原件\n\n2. 行李\n\n   - [x] 装包', meta = 'status: planned\nstart_date: "2026-09-25"') => frontmatter(`type: trip\ntitle: 测试\n${meta}`, `# 测试行程\n\n## 整体行程\n\n- 沿海散步\n\n${preparation}\n\n## 成本\n\n订单金额未提供。`);
+const withTaskTags = (preparation) => preparation.replace(/^(\s*- \[[ xX]\] )/gm, '$1<span class="task-tag">交通</span> ');
+const overview = (preparation = '## 出发准备\n\n1. **未完成**\n\n   - [ ] 带原件\n\n2. **已完成**\n\n   - [x] 装包', meta = 'status: planned\nstart_date: "2026-09-25"') => frontmatter(`type: trip\ntitle: 测试\n${meta}`, `# 测试行程\n\n## 整体行程\n\n- 沿海散步\n\n${withTaskTags(preparation)}\n\n## 成本\n\n订单金额未提供。`);
 
 function fixture(t, files = {}) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'travel-guide-validation-'));
@@ -29,9 +30,22 @@ test('当前六篇攻略作为正向样本', () => {
   assert.deepEqual(result.issues, []);
 });
 
-test('有说明段、加粗时间、相对时间和任意数量分类的合法攻略通过', (t) => {
+test('有说明段、加粗时间、相对时间和未完成已完成分组的合法攻略通过', (t) => {
   const dir = fixture(t, { 'README.md': overview(), 'a.md': city(), 'b.md': city() });
   assert.deepEqual(validateGuide(dir).issues, []);
+});
+
+test('准备清单允许省略空状态类别并接受大写完成标记', (t) => {
+  const dir = fixture(t, { 'README.md': overview(), 'a.md': city(), 'b.md': city() });
+  for (const preparation of [
+    '## 出发准备\n\n1. **未完成**\n\n   - [ ] 带原件\n   - [ ] 买车票',
+    '## 出发准备\n\n1. **已完成**\n\n   - [x] 已购车票\n   - [X] 已订酒店',
+    '## 出发准备\n\n1. 未完成\n\n   - [ ] 带原件\n\n2. 已完成\n\n   - [x] 已购车票',
+    '## 出发准备\n\n暂无准备事项。',
+  ]) {
+    fs.writeFileSync(path.join(dir, 'README.md'), overview(preparation));
+    assert.deepEqual(validateGuide(path.join(dir, 'README.md')).issues, [], preparation);
+  }
 });
 
 test('多城市总览拒绝缺少成本、栏目错序和额外栏目', (t) => {
@@ -66,18 +80,58 @@ test('合法闰日通过，start_date 的非闰日被拒绝', (t) => {
 test('重复准备标题、h3分类、平铺checkbox和无checkbox分类被拒绝', (t) => {
   const dir = fixture(t, { 'README.md': overview(), 'a.md': city(), 'b.md': city() });
   for (const preparation of [
-    '## 出发准备\n\n1. 证件\n\n   - [ ] 原件\n\n## 出发准备\n\n- [ ] 包',
-    '## 出发准备\n\n### 证件\n\n- [ ] 原件',
+    '## 出发准备\n\n1. **未完成**\n\n   - [ ] 原件\n\n## 出发准备\n\n- [ ] 包',
+    '## 出发准备\n\n### 未完成\n\n- [ ] 原件',
     '## 出发准备\n\n- [ ] 原件',
-    '## 出发准备\n\n1. 证件\n\n   - 原件',
+    '## 出发准备\n\n1. **未完成**\n\n   - 原件',
   ]) {
     fs.writeFileSync(path.join(dir, 'README.md'), overview(preparation));
     assert.ok(validateGuide(path.join(dir, 'README.md')).issues.some((issue) => ['总览准备', '准备分类'].includes(issue.rule)), preparation);
   }
 });
 
-test('准备段即使有正确编号清单，额外h4分类也必须拒绝', (t) => {
-  const preparation = '## 出发准备\n\n1. 证件\n\n   - [ ] 原件\n\n#### 行李分类\n\n装随身包。';
+test('准备类别拒绝主题分类、顺序颠倒、重复类别及空类别', (t) => {
+  const dir = fixture(t, { 'README.md': overview(), 'a.md': city(), 'b.md': city() });
+  for (const preparation of [
+    '## 出发准备\n\n1. **证件**\n\n   - [ ] 原件\n\n2. **交通**\n\n   - [x] 车票',
+    '## 出发准备\n\n1. **已完成**\n\n   - [x] 车票\n\n2. **未完成**\n\n   - [ ] 原件',
+    '## 出发准备\n\n1. **未完成**\n\n   - [ ] 原件\n\n2. **未完成**\n\n   - [ ] 接驳',
+    '## 出发准备\n\n1. **未完成**\n\n2. **已完成**\n\n   - [x] 车票',
+  ]) {
+    fs.writeFileSync(path.join(dir, 'README.md'), overview(preparation));
+    assert.ok(validateGuide(path.join(dir, 'README.md')).issues.some((issue) => issue.rule === '准备分类'), preparation);
+  }
+});
+
+test('准备状态必须与类别对应，不接受混放或嵌套子类', (t) => {
+  const dir = fixture(t, { 'README.md': overview(), 'a.md': city(), 'b.md': city() });
+  for (const [preparation, rule] of [
+    ['## 出发准备\n\n1. **未完成**\n\n   - [x] 已购车票', '准备状态'],
+    ['## 出发准备\n\n1. **已完成**\n\n   - [ ] 孩子登记未知', '准备状态'],
+    ['## 出发准备\n\n1. **未完成**\n\n   - [ ] 核对证件\n   - [x] 已购票\n   - [ ] 孩子登记', '准备状态'],
+    ['## 出发准备\n\n1. **未完成**\n\n   - [ ] 核对证件\n     - [ ] 另一个子任务', '准备分类'],
+    ['## 出发准备\n\n1. **未完成**\n\n   - [ ] 核对证件\n     1. 交通\n        - [ ] 买票', '准备分类'],
+  ]) {
+    fs.writeFileSync(path.join(dir, 'README.md'), overview(preparation));
+    assert.ok(validateGuide(path.join(dir, 'README.md')).issues.some((issue) => issue.rule === rule && issue.line > 1), preparation);
+  }
+});
+
+test('多城市总览准备项需要主题标签和具体动作，标签不替代状态组', (t) => {
+  const dir = fixture(t, { 'README.md': overview(), 'a.md': city(), 'b.md': city() });
+  for (const invalid of [
+    overview().replace('<span class="task-tag">交通</span> ', ''),
+    overview().replace('<span class="task-tag">交通</span>', '<span class="task-tag"></span>'),
+    overview().replace('<span class="task-tag">交通</span>', '<span class="task-tag"> </span>'),
+    overview().replace('<span class="task-tag">交通</span> 带原件', '<span class="task-tag">交通</span>'),
+  ]) {
+    fs.writeFileSync(path.join(dir, 'README.md'), invalid);
+    assert.ok(validateGuide(path.join(dir, 'README.md')).issues.some((issue) => issue.rule === '准备标签'));
+  }
+});
+
+test('准备段即使有正确状态分类，额外h4分类也必须拒绝', (t) => {
+  const preparation = '## 出发准备\n\n1. **未完成**\n\n   - [ ] 原件\n\n#### 行李分类\n\n装随身包。';
   const source = overview(preparation);
   const dir = fixture(t, { 'README.md': source, 'a.md': city(), 'b.md': city() });
   const line = source.split('\n').findIndex((text) => text.startsWith('#### ')) + 1;
@@ -109,6 +163,27 @@ test('单文件只校验选中文件，不校验未选历史；CLI失败返回�
   assert.equal(result.status, 1);
   assert.ok(result.stderr.includes(`${path.join(dir, 'legacy.md')}:1`));
   assert.match(result.stdout, /不核验旅行事实/);
+});
+
+test('显式新总览校验不会迁移或扫描相邻历史分类格式', (t) => {
+  const legacy = overview('## 出发准备\n\n1. 证件\n\n   - [x] 已准备\n   - [ ] 旧待办');
+  const dir = fixture(t, {
+    'current/README.md': overview(), 'current/a.md': city(), 'current/b.md': city(),
+    'history/README.md': legacy, 'history/a.md': city(), 'history/b.md': city(),
+  });
+  const result = validateGuide(path.join(dir, 'current'));
+  assert.equal(result.files.length, 3);
+  assert.deepEqual(result.issues, []);
+  assert.equal(fs.readFileSync(path.join(dir, 'history/README.md'), 'utf8'), legacy);
+  assert.ok(validateGuide(path.join(dir, 'history/README.md')).issues.some((issue) => issue.rule === '准备分类'));
+});
+
+test('城市正文和专题的既有checkbox不强制总览状态组或主题标签', (t) => {
+  const dir = fixture(t, {
+    'city.md': `${city()}\n## 出发准备\n\n- [ ] 城市特有动作\n`,
+    'note.md': frontmatter('type: note', '# 专题\n\n## 出发准备\n\n- [ ] 专题特有材料'),
+  });
+  for (const file of ['city.md', 'note.md']) assert.deepEqual(validateGuide(path.join(dir, file)).issues, []);
 });
 
 test('CLI拒绝空参数和多参数，不隐式全仓扫描', () => {

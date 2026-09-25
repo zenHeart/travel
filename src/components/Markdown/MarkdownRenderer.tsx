@@ -89,7 +89,8 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     return content.split("\n").map((line) => {
       const task = line.match(/^\s*(?:[-*+]|\d+[.)]) \[([ xX])\]\s+(.+)$/);
       if (!task) return null;
-      const text = task[2];
+      // 分类标签不改变事项身份，调整标签后仍沿用原勾选状态。
+      const text = task[2].replace(/^<span\s+class=(["'])task-tag\1>[^<]+<\/span>\s*/, "");
       const occurrence = occurrences.get(text) ?? 0;
       occurrences.set(text, occurrence + 1);
       return { checked: task[1].toLowerCase() === "x", text, occurrence, key: `${text}:${occurrence}` };
