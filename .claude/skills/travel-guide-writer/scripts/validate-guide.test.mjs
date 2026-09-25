@@ -11,7 +11,7 @@ const script = fileURLToPath(new URL('./validate-guide.mjs', import.meta.url));
 const root = fileURLToPath(new URL('../../../../', import.meta.url));
 const frontmatter = (meta, body) => `---\n${meta}\n---\n\n${body}\n`;
 const city = (day = '2026-09-25', steps = '1. `约 09:30–10:30` 早餐。\n2. **`出站后`** 取行李。') => frontmatter('type: city\nchinese_name: 测试城', `# 测试城\n\n## 行程\n\n### ${day} · 抵达\n\n出发前按订单核对。\n\n${steps}\n\n## 吃\n\n- 早餐\n\n## 景点\n\n- 海边`);
-const overview = (preparation = '## 出发准备\n\n1. 证件\n\n   - [ ] 带原件\n\n2. 行李\n\n   - [x] 装包', meta = 'status: planned\nstart_date: "2026-09-25"') => frontmatter(`type: trip\ntitle: 测试\n${meta}`, `# 测试行程\n\n## 整体行程\n\n- 沿海散步\n\n${preparation}`);
+const overview = (preparation = '## 出发准备\n\n1. 证件\n\n   - [ ] 带原件\n\n2. 行李\n\n   - [x] 装包', meta = 'status: planned\nstart_date: "2026-09-25"') => frontmatter(`type: trip\ntitle: 测试\n${meta}`, `# 测试行程\n\n## 整体行程\n\n- 沿海散步\n\n${preparation}\n\n## 成本\n\n订单金额未提供。`);
 
 function fixture(t, files = {}) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'travel-guide-validation-'));
@@ -32,6 +32,20 @@ test('当前六篇攻略作为正向样本', () => {
 test('有说明段、加粗时间、相对时间和任意数量分类的合法攻略通过', (t) => {
   const dir = fixture(t, { 'README.md': overview(), 'a.md': city(), 'b.md': city() });
   assert.deepEqual(validateGuide(dir).issues, []);
+});
+
+test('多城市总览拒绝缺少成本、栏目错序和额外栏目', (t) => {
+  const source = overview();
+  const dir = fixture(t, { 'README.md': source, 'a.md': city(), 'b.md': city() });
+  for (const invalid of [
+    source.replace('## 成本', '成本'),
+    source.replace('## 整体行程', '## 成本').replace(/## 成本(?=\n\n订单金额)/, '## 整体行程'),
+    `${source}\n## 途中提醒\n\n随时调整。`,
+    `${source}\n## 成本\n\n重复账单。`,
+  ]) {
+    fs.writeFileSync(path.join(dir, 'README.md'), invalid);
+    assert.ok(validateGuide(path.join(dir, 'README.md')).issues.some((issue) => issue.rule === '总览结构'));
+  }
 });
 
 test('无效日历日期、省略年份、缺时间或动作和checkbox时间轴均失败', (t) => {

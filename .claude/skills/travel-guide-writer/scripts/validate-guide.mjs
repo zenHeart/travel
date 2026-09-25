@@ -144,6 +144,11 @@ export function validateGuide(input) {
       const cityCount = fs.readdirSync(path.dirname(file)).filter((name) => name.endsWith('.md') && name !== path.basename(file))
         .filter((name) => fs.statSync(path.join(path.dirname(file), name)).isFile() && load(path.join(path.dirname(file), name)).meta.type === 'city').length;
       if (cityCount >= 2) {
+        const sections = headings.filter((heading) => heading.level === 2);
+        const expected = ['整体行程', '出发准备', '成本'];
+        if (sections.length !== expected.length || sections.some((heading, index) => heading.text !== expected[index])) {
+          add(file, sections.find((heading, index) => heading.text !== expected[index])?.line ?? 1, '总览结构', '多城市总览的 h2 依次且仅为「整体行程」「出发准备」「成本」');
+        }
         const preparations = headings.filter((heading) => heading.level === 2 && /^出发准备(?:\s+checklist)?$/i.test(heading.text));
         if (preparations.length !== 1) add(file, preparations[1]?.line ?? 1, '总览准备', '多城市总览需且仅需一个「## 出发准备」');
         for (const preparation of preparations) {
