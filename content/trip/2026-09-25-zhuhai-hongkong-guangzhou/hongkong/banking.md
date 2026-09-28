@@ -2,7 +2,7 @@
 type: note
 nav_title: 办卡指南
 order: 1
-verified_at: 2026-09-25
+verified_at: 2026-09-28
 ---
 
 # 香港办卡指南
@@ -64,7 +64,7 @@ verified_at: 2026-09-25
 
 **中途离开先点「储存及退出」。** 从建立申请日起 7 天内，可在首页「我要继续未完成的申请」输入用户名、密码及短信验证码继续；断线不会自动保存。是否仍需在港完成，按页面及银行回执要求处理。[保存申请说明](https://www.bochk.com/dam/more/accountopening/images/faq_sc.pdf)
 
-成功开户后仍有银行内部审阅，中银卡启用和转账权限可能分阶段生效；需要转账时，在 App 内查看当前额度与状态。**储蓄、外汇宝、提款卡不等于证券账户。** 中银对内地身份证持有人开投资账户要求到分行办理，本次不安排证券及美股业务。[账户与审阅说明](https://www.bochk.com/dam/more/accountopening/images/faq_sc.pdf)
+成功开户后仍有银行内部审阅，中银卡启用和转账权限可能分阶段生效；需要转账时，在 App 内查看当前额度与状态。**储蓄、外汇宝、提款卡不等于证券账户。** 内地身份证持有人不能在这个 App 里继续开投资账户，须另去分行。[开户说明](https://www.bochk.com/dam/more/accountopening/sc.html) 2026 年 5 月 22 日金管局要求，新开投资账户还要书面确认：用于投资及结算的资金来自中国内地以外的合法来源。[金管局通告附录](https://brdr.hkma.gov.hk/chi/doc-ldg/docId/getPdf/20260522-10-TC/20260522-10-TC.pdf) 本次 `13:00–14:30` 不办投资账户，也不改去分行。[账户与审阅说明](https://www.bochk.com/dam/more/accountopening/images/faq_sc.pdf)
 
 ## VTM 备选：柯士甸站
 
